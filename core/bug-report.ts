@@ -67,6 +67,13 @@ export const INJECTION =
   /\b(ignore (?:all |any )?(?:previous|prior|above|earlier) (?:instructions|messages)|disregard (?:the|all|previous)|system prompt|you are now|as an ai|every link|all (?:the )?links|developer mode)\b/i;
 export const SECRETS = /\b(password|passcode|otp|one[- ]time code|credit card|card number|cvv|ssn|api key|token|secret)\b/i;
 
+// Form fields a reporter lists inline: "with name Dev Patel, email dev+x@y.com and studio Clay and Kiln".
+const FIELD_LABEL =
+  '(?:full |first |last |user ?)?name|e-?mail(?: address)?|studio(?: name)?|company(?: name)?|business(?: name)?|phone(?: number)?|username|website|city|zip(?: code)?|postcode|password';
+const FIELD_LIST = new RegExp(`\\b(?:with|using)\\s+(?:my\\s+|the\\s+)?((?:${FIELD_LABEL})\\s+.+)$`, 'i');
+const FIELD_SPLIT = new RegExp(`\\s*,\\s*(?:and\\s+)?(?:my\\s+|the\\s+)?(?=(?:${FIELD_LABEL})\\s)|\\s+and\\s+(?:my\\s+|the\\s+)?(?=(?:${FIELD_LABEL})\\s)`, 'i');
+const FIELD_PAIR = new RegExp(`^(${FIELD_LABEL})\\s+(?:(?:is|of|as)\\s+)?(.+)$`, 'i');
+
 const MAX_STEPS = 8;
 const MAX_STEP_LENGTH = 160;
 
@@ -148,7 +155,9 @@ export function extractReproHeuristic(input: BugReportInput, allowedOrigins: str
     if (INJECTION.test(sentence)) continue;
     const cleaned = sentence.replace(/^\s*(?:\d+[.)]|[-*•])\s*/, '').trim();
     for (const clause of cleaned.split(CLAUSE_SPLIT)) {
-      if (STEP_VERB.test(clause.trim())) steps.push(imperative(clause.trim()));
+      const fills = fieldSteps(clause.trim());
+      if (fills.length) steps.push(...fills);
+      else if (STEP_VERB.test(clause.trim())) steps.push(imperative(clause.trim()));
     }
   }
   let expected: string | null = null;
@@ -289,6 +298,24 @@ const PAST_TO_IMPERATIVE: Record<string, string> = {
   entered: 'enter', typed: 'type', filled: 'fill', submitted: 'submit', scrolled: 'scroll', hovered: 'hover',
   added: 'add', signed: 'sign', logged: 'log', checked: 'check', opened: 'open', visited: 'visit', navigated: 'navigate',
 };
+
+/**
+ * "…sign up at /signup with name Dev Patel, email dev+x@y.com and studio Clay and Kiln"
+ * → ["Enter name 'Dev Patel'", "Enter email 'dev+x@y.com'", "Enter studio 'Clay and Kiln'"].
+ * The exact values matter: in a bug report they are often what triggers the bug.
+ */
+function fieldSteps(clause: string): string[] {
+  const list = FIELD_LIST.exec(clause)?.[1];
+  if (!list) return [];
+  const steps: string[] = [];
+  for (const part of list.split(FIELD_SPLIT)) {
+    const pair = FIELD_PAIR.exec(part.trim());
+    const value = pair?.[2]?.trim().replace(/^['"]|['"]$/g, '').replace(/[.,!?;:]+$/, '');
+    if (!pair?.[1] || !value || value.length > 80) continue;
+    steps.push(`Enter ${pair[1].toLowerCase()} '${value}'`);
+  }
+  return steps;
+}
 
 /** "I clicked Upgrade" → "Click Upgrade". */
 function imperative(clause: string): string {

@@ -174,6 +174,7 @@ const server = createServer(async (req, res) => {
       }
       if (id && ['approve', 'dismiss', 'fix', 'undo'].includes(action) && req.method === 'POST') {
         const found = tasks[action](id);
+        if (found?.blocked) return send(res, 409, { error: found.blocked });
         return found ? send(res, 202, found) : send(res, 404, { error: 'not found' });
       }
       if (id && action === 'stream') {

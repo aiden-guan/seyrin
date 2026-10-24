@@ -18,7 +18,7 @@ Seyrin is Aiden's entry for **Kane CLI Hack Day SF (Sat Oct 24, 2026)**. It is a
 
 ## Run it
 ```bash
-npm install && npm start      # Perch (demo product) on :4480, Seyrin on http://127.0.0.1:4477
+npm install && npm start      # Perch (demo product) on :4480, Seyrin on http://127.0.0.1:4477; also runs demo:prepare (skip: --no-prepare or SEYRIN_PREPARE=0)
 npm test                      # core unit tests (vitest)
 npx vite build app            # inbox app → app/dist (the server serves it)
 npm run demo:prepare          # reset + pre-run every demo email; leaves Approve / Fix it for a live demo
