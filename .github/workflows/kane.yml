@@ -1,5 +1,6 @@
-# Replays every saved Kane flow (demo-app/.testmuai/tests/*_test.md) against Perch on each push/PR.
-# Needs repo secrets KANE_USERNAME and KANE_ACCESS_KEY (optional: KANE_PROJECT_ID, KANE_FOLDER_ID).
+# Unit tests and the app build on every push. When the repo has Kane credentials (secrets KANE_USERNAME
+# and KANE_ACCESS_KEY; optional KANE_PROJECT_ID, KANE_FOLDER_ID), it also replays every saved Kane flow
+# (demo-app/.testmuai/tests/*_test.md) against Perch, then runs them as one suite with kane-cli testrun.
 name: Kane gate
 
 on:
@@ -8,58 +9,66 @@ on:
   workflow_dispatch:
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npm test
+      - run: npx vite build app
+
   kane:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
       KANE_CLI_USER_AGENT: github-actions
+      KANE_USERNAME: ${{ secrets.KANE_USERNAME }}
+      KANE_ACCESS_KEY: ${{ secrets.KANE_ACCESS_KEY }}
+      KANE_PROJECT_ID: ${{ secrets.KANE_PROJECT_ID }}
+      KANE_FOLDER_ID: ${{ secrets.KANE_FOLDER_ID }}
     steps:
+      - name: Skip without Kane credentials
+        if: env.KANE_USERNAME == '' || env.KANE_ACCESS_KEY == ''
+        run: echo "::notice::Add KANE_USERNAME and KANE_ACCESS_KEY repository secrets to replay the Kane flows in CI."
+
       - uses: actions/checkout@v4
+        if: env.KANE_USERNAME != '' && env.KANE_ACCESS_KEY != ''
 
       - uses: actions/setup-node@v4
+        if: env.KANE_USERNAME != '' && env.KANE_ACCESS_KEY != ''
         with:
           node-version: 24
 
-      - name: Install Kane CLI
+      - name: Install Kane CLI and start Perch
+        if: env.KANE_USERNAME != '' && env.KANE_ACCESS_KEY != ''
         run: |
-          npm install -g @testmuai/kane-cli
-          kane-cli --version
-
-      - name: Start Perch
-        run: |
+          npm install -g @testmuai/kane-cli@rc
           node demo-app/server.mjs > perch.log 2>&1 &
-          for i in $(seq 1 30); do
-            if curl -sf http://127.0.0.1:4480/ > /dev/null; then echo "Perch is up on :4480"; exit 0; fi
-            sleep 1
-          done
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:4480/ > /dev/null && exit 0; sleep 1; done
           echo "::error::Perch did not start on port 4480"; cat perch.log; exit 1
 
       - name: Log in to Kane
-        env:
-          KANE_USERNAME: ${{ secrets.KANE_USERNAME }}
-          KANE_ACCESS_KEY: ${{ secrets.KANE_ACCESS_KEY }}
-          KANE_PROJECT_ID: ${{ secrets.KANE_PROJECT_ID }}
-          KANE_FOLDER_ID: ${{ secrets.KANE_FOLDER_ID }}
+        if: env.KANE_USERNAME != '' && env.KANE_ACCESS_KEY != ''
         run: |
-          if [ -z "$KANE_USERNAME" ] || [ -z "$KANE_ACCESS_KEY" ]; then
-            echo "::error::Set the KANE_USERNAME and KANE_ACCESS_KEY repository secrets"; exit 1
-          fi
           args=(--username "$KANE_USERNAME" --access-key "$KANE_ACCESS_KEY")
           if [ -n "$KANE_PROJECT_ID" ]; then args+=(--project-id "$KANE_PROJECT_ID"); fi
           if [ -n "$KANE_FOLDER_ID" ]; then args+=(--folder-id "$KANE_FOLDER_ID"); fi
           kane-cli login "${args[@]}" < /dev/null
-          kane-cli whoami < /dev/null || true
 
-      - name: Replay Kane flows
+      - name: Replay Kane flows (gate)
+        if: env.KANE_USERNAME != '' && env.KANE_ACCESS_KEY != ''
         run: node gate/kane-gate.mjs --check demo-app
 
       - name: Run the saved flows as one Kane suite
-        if: always()
+        if: always() && env.KANE_USERNAME != '' && env.KANE_ACCESS_KEY != ''
         working-directory: demo-app
-        run: kane-cli testrun run --agent --name "Perch regression suite" < /dev/null | tee ../testrun.ndjson | grep -E '"type":"(testrun_done|testrun_summary)"' || true
+        run: kane-cli testrun run --agent --name "Perch regression suite" < /dev/null | tee ../testrun.ndjson | grep -E '"type":"testrun_done"'
 
       - name: Upload Kane evidence
-        if: always()
+        if: always() && env.KANE_USERNAME != '' && env.KANE_ACCESS_KEY != ''
         uses: actions/upload-artifact@v4
         with:
           name: kane-evidence
