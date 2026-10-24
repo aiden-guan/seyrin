@@ -1,29 +1,30 @@
-/* Seyrin inbox. A dark instrument: near-black layers, hairline borders, Geist type, one violet for
-   Seyrin, green only for what Kane verified. Motion is short, springy and always means something. */
+/* Seyrin inbox. Light and quiet: warm paper, white surfaces, hairline borders, Geist type. Colour is
+   reserved for meaning (violet for Seyrin at work, green for what Kane verified, amber for "needs you"). */
 
 :root {
-  --bg: #09090b;
-  --bg-1: #0c0c0f;
-  --surface: #121216;
-  --surface-2: #17171c;
-  --raise: #1c1c22;
-  --hover: rgba(255, 255, 255, 0.035);
-  --line: rgba(255, 255, 255, 0.07);
-  --line-2: rgba(255, 255, 255, 0.11);
-  --line-3: rgba(255, 255, 255, 0.18);
+  --bg: #f7f7f5;
+  --bg-1: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #fafaf9;
+  --sunken: #f4f4f2;
+  --raise: #ffffff;
+  --hover: rgba(20, 20, 24, 0.035);
+  --line: rgba(20, 20, 24, 0.07);
+  --line-2: rgba(20, 20, 24, 0.11);
+  --line-3: rgba(20, 20, 24, 0.2);
 
-  --ink: #ededf0;
-  --ink-2: #b9b9c2;
-  --muted: #80808b;
-  --faint: #56565f;
+  --ink: #17171b;
+  --ink-2: #45454d;
+  --muted: #76767f;
+  --faint: #a4a4ac;
 
-  --accent: #a99bff;
-  --accent-2: #7c6cff;
-  --good: #5fe0a1;
-  --warn: #f6b65a;
-  --bad: #ff7d73;
-  --info: #7fb5ff;
-  --neutral: #9b9ba6;
+  --accent: #5b4fd0;
+  --accent-2: #4a3fbf;
+  --good: #1d7f54;
+  --warn: #a35f00;
+  --bad: #c2372c;
+  --info: #2e64c8;
+  --neutral: #6b6b74;
 
   --sans: 'Geist Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
@@ -33,10 +34,10 @@
   --spring: cubic-bezier(0.32, 0.72, 0, 1);
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 
-  --shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 12px 32px -12px rgba(0, 0, 0, 0.7);
-  --shadow-pop: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 24px 60px -16px rgba(0, 0, 0, 0.85), 0 0 0 1px var(--line-2);
+  --shadow: 0 0 0 1px var(--line), 0 1px 2px rgba(20, 20, 24, 0.04), 0 8px 24px -12px rgba(20, 20, 24, 0.12);
+  --shadow-pop: 0 0 0 1px var(--line-2), 0 2px 4px rgba(20, 20, 24, 0.04), 0 20px 48px -16px rgba(20, 20, 24, 0.22);
 
-  color-scheme: dark;
+  color-scheme: light;
   font-family: var(--sans);
   font-size: 13.5px;
   line-height: 1.5;
@@ -84,11 +85,11 @@ a {
   border-radius: 8px;
 }
 ::selection {
-  background: rgba(124, 108, 255, 0.35);
+  background: rgba(91, 79, 208, 0.18);
 }
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  scrollbar-color: rgba(20, 20, 24, 0.14) transparent;
 }
 
 .sr-only {
@@ -128,12 +129,9 @@ a {
   align-items: center;
   gap: 8px;
   margin: 0;
-  font-family: var(--mono);
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--faint);
+  color: var(--muted);
 }
 
 /* ------------------------------------------------------------------ motion */
@@ -253,16 +251,6 @@ a {
   overflow: hidden;
   isolation: isolate;
 }
-/* A whisper of film grain over everything, so the blacks don't look flat. */
-.app::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 70;
-  pointer-events: none;
-  opacity: 0.035;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
 
 /* ------------------------------------------------------------------ primitives */
 
@@ -308,30 +296,31 @@ a {
   height: 14px;
 }
 .btn-primary {
-  --btn-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 6px 18px -8px rgba(255, 255, 255, 0.35);
-  background: linear-gradient(180deg, #ffffff, #dcdce3);
-  color: #0b0b0e;
+  --btn-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 1px 2px rgba(20, 20, 24, 0.2);
+  background: var(--ink);
+  color: #fff;
 }
 .btn-primary:hover:not(:disabled) {
-  --btn-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 8px 26px -8px rgba(255, 255, 255, 0.5);
-  background: linear-gradient(180deg, #ffffff, #ececf1);
+  --btn-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 6px 16px -6px rgba(20, 20, 24, 0.4);
+  background: #2a2a30;
 }
 .btn-ghost {
-  background: rgba(255, 255, 255, 0.03);
+  --btn-shadow: 0 1px 2px rgba(20, 20, 24, 0.05);
+  background: var(--surface);
   border-color: var(--line-2);
   color: var(--ink);
 }
 .btn-ghost:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--surface-2);
   border-color: var(--line-3);
 }
 .btn-quiet {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: var(--line);
+  background: var(--sunken);
+  border-color: transparent;
   color: var(--ink);
 }
 .btn-quiet:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.08);
+  background: #ececea;
 }
 .btn-sm {
   height: 28px;
@@ -358,7 +347,7 @@ a {
     transform 0.18s var(--spring);
 }
 .icon-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--hover);
   color: var(--ink);
 }
 .icon-btn:active:not(:disabled) {
@@ -369,13 +358,13 @@ a {
   cursor: default;
 }
 .icon-btn-solid {
-  background: linear-gradient(180deg, #ffffff, #dcdce3);
-  color: #0b0b0e;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+  background: var(--ink);
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(20, 20, 24, 0.2);
 }
 .icon-btn-solid:hover:not(:disabled) {
-  background: #fff;
-  color: #000;
+  background: #2a2a30;
+  color: #fff;
   transform: rotate(-8deg) scale(1.06);
 }
 .icon-btn.is-spinning svg {
@@ -397,7 +386,9 @@ a {
   transition: color 0.15s var(--ease);
 }
 .link:hover {
-  color: #c9c0ff;
+  color: var(--accent-2);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 .link svg {
   width: 11px;
@@ -438,8 +429,8 @@ a {
   font-weight: 560;
   white-space: nowrap;
   color: var(--t, var(--ink-2));
-  background: color-mix(in oklab, var(--t, var(--neutral)) 12%, transparent);
-  border: 1px solid color-mix(in oklab, var(--t, var(--neutral)) 22%, transparent);
+  background: color-mix(in oklab, var(--t, var(--neutral)) 9%, transparent);
+  border: 0;
 }
 
 .kind {
@@ -477,7 +468,6 @@ a {
   height: 6px;
   border-radius: 50%;
   background: var(--t, var(--faint));
-  box-shadow: 0 0 0 3px color-mix(in oklab, var(--t, var(--faint)) 18%, transparent);
   flex: none;
 }
 .spinner {
@@ -522,10 +512,10 @@ a {
   max-width: 240px;
   padding: 6px 9px;
   border-radius: 8px;
-  background: #222229;
-  border: 1px solid var(--line-2);
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.9);
-  color: var(--ink);
+  background: var(--ink);
+  border: 0;
+  box-shadow: 0 8px 24px -8px rgba(20, 20, 24, 0.35);
+  color: #fff;
   font-family: var(--sans);
   font-size: 11.5px;
   font-weight: 450;
@@ -568,7 +558,7 @@ a {
   gap: 16px;
   height: 52px;
   padding: 0 14px 0 18px;
-  background: var(--bg);
+  background: var(--surface);
   border-bottom: 1px solid var(--line);
   animation: rise 0.5s var(--spring) both;
 }
@@ -581,7 +571,7 @@ a {
 .brand svg {
   flex: none;
   border-radius: 7px;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 4px 18px -4px rgba(124, 108, 255, 0.6);
+  box-shadow: 0 1px 2px rgba(20, 20, 24, 0.12);
 }
 .wordmark {
   font-family: var(--pixel);
@@ -597,35 +587,20 @@ a {
   gap: 6px;
   margin-left: auto;
 }
-.chip {
+/* Only problems get a voice up here. */
+.alert {
   display: inline-flex;
   align-items: center;
   gap: 7px;
   height: 26px;
   padding: 0 10px;
-  border-radius: 8px;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.02);
-  font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--ink-2);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 520;
   white-space: nowrap;
-  cursor: default;
-  transition:
-    border-color 0.18s var(--ease),
-    background 0.18s var(--ease);
-}
-.chip:hover {
-  border-color: var(--line-2);
-  background: rgba(255, 255, 255, 0.04);
-}
-.chip.tone-good .dot {
-  animation: none;
-}
-.chip-dim {
-  color: var(--faint);
-  margin-left: 2px;
+  color: var(--t);
+  background: color-mix(in oklab, var(--t) 9%, transparent);
+  animation: pop 0.4s var(--spring) both;
 }
 .top-links {
   display: flex;
@@ -658,7 +633,7 @@ a {
     color 0.18s var(--ease);
 }
 .top-link:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--hover);
   color: var(--ink);
 }
 .top-link:hover svg {
@@ -701,12 +676,10 @@ a {
   height: 20px;
   padding: 0 7px;
   border-radius: 6px;
-  font-family: var(--mono);
-  font-size: 10.5px;
-  font-weight: 500;
+  font-size: 11.5px;
+  font-weight: 540;
   color: var(--warn);
-  background: color-mix(in oklab, var(--warn) 12%, transparent);
-  border: 1px solid color-mix(in oklab, var(--warn) 24%, transparent);
+  background: color-mix(in oklab, var(--warn) 10%, transparent);
   animation: pop 0.45s var(--spring) both;
 }
 .list-head .icon-btn {
@@ -735,24 +708,13 @@ a {
   right: 8px;
   z-index: 0;
   border-radius: 12px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.035));
-  border: 1px solid var(--line-2);
-  box-shadow: 0 8px 24px -14px rgba(0, 0, 0, 0.9);
+  background: var(--surface);
+  border: 0;
+  box-shadow: var(--shadow);
   pointer-events: none;
   transition:
     transform 0.5s var(--spring),
     height 0.5s var(--spring);
-}
-.row-glow::before {
-  content: '';
-  position: absolute;
-  left: -1px;
-  top: 14px;
-  bottom: 14px;
-  width: 2px;
-  border-radius: 2px;
-  background: var(--accent);
-  box-shadow: 0 0 12px var(--accent);
 }
 .rows .row {
   position: relative;
@@ -840,7 +802,8 @@ a {
   grid-area: thread;
   min-height: 0;
   overflow: auto;
-  background: var(--bg-1);
+  background: var(--surface);
+  border-right: 1px solid var(--line);
 }
 .thread-inner {
   max-width: 720px;
@@ -871,11 +834,9 @@ a {
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.02em;
-  color: var(--t, var(--ink));
-  background:
-    radial-gradient(circle at 30% 25%, color-mix(in oklab, var(--t, var(--neutral)) 30%, transparent), transparent 70%),
-    color-mix(in oklab, var(--t, var(--neutral)) 10%, var(--surface));
-  border: 1px solid color-mix(in oklab, var(--t, var(--neutral)) 28%, transparent);
+  color: var(--ink-2);
+  background: var(--sunken);
+  border: 1px solid var(--line);
 }
 .from-text {
   min-width: 0;
@@ -912,15 +873,15 @@ a {
 .reply {
   margin-top: 32px;
   border-radius: 14px;
-  border: 1px solid var(--line);
-  background: var(--surface);
+  border: 1px solid var(--line-2);
+  background: var(--surface-2);
   transition:
     border-color 0.2s var(--ease),
     box-shadow 0.25s var(--ease);
 }
 .reply:focus-within {
-  border-color: color-mix(in oklab, var(--accent) 45%, transparent);
-  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 12%, transparent);
+  border-color: var(--line-3);
+  box-shadow: 0 0 0 4px rgba(20, 20, 24, 0.04);
 }
 .reply textarea {
   display: block;
@@ -956,10 +917,7 @@ a {
   position: relative;
   overflow: auto;
   min-height: 0;
-  background:
-    radial-gradient(120% 40% at 100% 0%, rgba(124, 108, 255, 0.09), transparent 60%),
-    var(--bg);
-  border-left: 1px solid var(--line);
+  background: var(--bg);
   scrollbar-gutter: stable;
 }
 .panel:focus {
@@ -974,7 +932,7 @@ a {
   gap: 9px;
   height: 52px;
   padding: 0 18px 0 20px;
-  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
   backdrop-filter: saturate(1.6) blur(14px);
   -webkit-backdrop-filter: saturate(1.6) blur(14px);
   border-bottom: 1px solid var(--line);
@@ -988,24 +946,29 @@ a {
   font-size: 14px;
   letter-spacing: -0.01em;
 }
+.sp-kind {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.sp-kind::before {
+  content: '·';
+  margin-right: 8px;
+  color: var(--faint);
+}
 .status-pill {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  height: 26px;
+  gap: 7px;
   margin-left: auto;
-  padding: 0 11px 0 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 560;
+  font-size: 12.5px;
+  font-weight: 540;
   color: var(--t);
-  background: color-mix(in oklab, var(--t) 10%, transparent);
-  border: 1px solid color-mix(in oklab, var(--t) 24%, transparent);
   overflow: hidden;
-  transition:
-    color 0.3s var(--ease),
-    background 0.3s var(--ease),
-    border-color 0.3s var(--ease);
+  transition: color 0.3s var(--ease);
+}
+.status-pill .spinner {
+  width: 11px;
+  height: 11px;
 }
 .status-word {
   display: inline-block;
@@ -1074,12 +1037,10 @@ a {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--mono);
-  font-size: 10.5px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--ink);
   list-style: none;
 }
 .sp-h svg {
@@ -1089,8 +1050,8 @@ a {
 }
 .sp-h-note {
   margin-left: auto;
-  font-size: 10.5px;
-  letter-spacing: 0.04em;
+  font-size: 12px;
+  font-weight: 450;
   color: var(--faint);
 }
 summary.sp-h {
@@ -1171,11 +1132,8 @@ details > :not(summary) {
   transform: none;
 }
 .sg-k {
-  font-family: var(--mono);
-  font-size: 9.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--faint);
+  font-size: 11.5px;
+  color: var(--muted);
 }
 .sg-v {
   display: flex;
@@ -1184,7 +1142,7 @@ details > :not(summary) {
   min-width: 0;
   font-size: 12.5px;
   font-weight: 560;
-  color: var(--t);
+  color: var(--t, var(--ink));
 }
 .sg-v > span {
   min-width: 0;
@@ -1248,7 +1206,7 @@ details > :not(summary) {
 }
 .sg.is-compact .sg-tile {
   padding: 8px 10px;
-  background: rgba(0, 0, 0, 0.25);
+  background: var(--surface-2);
 }
 
 /* Plan: a rail that fills as steps finish. */
@@ -1276,11 +1234,10 @@ details > :not(summary) {
   background: var(--line-2);
 }
 .plan::after {
-  background: linear-gradient(180deg, var(--good), var(--accent));
+  background: var(--good);
   transform-origin: top;
   transform: scaleY(var(--fill));
   transition: transform 0.8s var(--spring);
-  box-shadow: 0 0 10px color-mix(in oklab, var(--good) 50%, transparent);
 }
 .plan-step {
   position: relative;
@@ -1299,7 +1256,7 @@ details > :not(summary) {
   height: 28px;
   border-radius: 9px;
   color: var(--muted);
-  background: var(--surface-2);
+  background: var(--surface);
   border: 1px solid var(--line-2);
   transition:
     color 0.3s var(--ease),
@@ -1338,8 +1295,7 @@ details > :not(summary) {
 .plan-step.is-active .plan-icon {
   color: var(--accent);
   border-color: color-mix(in oklab, var(--accent) 50%, transparent);
-  background: color-mix(in oklab, var(--accent) 14%, var(--surface));
-  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 12%, transparent);
+  background: color-mix(in oklab, var(--accent) 8%, var(--surface));
 }
 .plan-step.is-active .plan-label {
   color: var(--ink);
@@ -1366,19 +1322,17 @@ details > :not(summary) {
   margin-top: 10px;
   padding: 10px 12px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px dashed var(--line-2);
+  background: var(--sunken);
+  border: 0;
 }
 .verify-h {
   display: flex;
   align-items: center;
   gap: 6px;
   margin-bottom: 4px;
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--faint);
+  font-size: 11.5px;
+  font-weight: 540;
+  color: var(--muted);
 }
 .verify-h svg {
   width: 12px;
@@ -1414,8 +1368,8 @@ details > :not(summary) {
   margin: 8px 0 0;
   padding: 12px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px solid var(--line);
+  background: var(--sunken);
+  border: 0;
 }
 .spec > div {
   display: grid;
@@ -1423,9 +1377,7 @@ details > :not(summary) {
   gap: 10px;
 }
 .spec dt {
-  font-family: var(--mono);
-  font-size: 10.5px;
-  letter-spacing: 0.04em;
+  font-size: 12px;
   color: var(--faint);
   padding-top: 2px;
 }
@@ -1457,10 +1409,8 @@ details > :not(summary) {
   border-radius: 16px;
   overflow: hidden;
   isolation: isolate;
-  background:
-    radial-gradient(120% 90% at 0% 0%, color-mix(in oklab, var(--t) 13%, transparent), transparent 55%),
-    var(--surface);
-  border: 1px solid color-mix(in oklab, var(--t) 26%, var(--line));
+  background: linear-gradient(180deg, color-mix(in oklab, var(--t) 5%, var(--surface)), var(--surface) 72px);
+  border: 0;
   box-shadow: var(--shadow);
   animation: focus-in 0.55s var(--spring) both;
 }
@@ -1475,7 +1425,7 @@ details > :not(summary) {
   width: 100%;
   height: 100%;
   color: var(--t);
-  opacity: 0.4;
+  opacity: 0.55;
   -webkit-mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.5) 45%, transparent 100%);
   mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.5) 45%, transparent 100%);
 }
@@ -1500,19 +1450,6 @@ details > :not(summary) {
   opacity: 0.55;
   -webkit-mask-image: none;
   mask-image: none;
-}
-/* One pass of light across a verified result. */
-.card-done::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 2;
-  width: 40%;
-  pointer-events: none;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.07), transparent);
-  animation: sheen 1.4s 0.35s var(--ease) both;
 }
 .card-h {
   display: flex;
@@ -1544,18 +1481,14 @@ details > :not(summary) {
 .card .row > span[title] {
   display: inline-flex;
 }
-.card-approve .btn-primary:not(:disabled),
-.card-bug .btn-primary:not(:disabled) {
-  animation: breathe 2.4s var(--ease) 0.6s infinite;
-}
 .proof {
   display: flex;
   gap: 9px;
   margin: 0;
   padding: 11px 12px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.28);
-  border: 1px solid color-mix(in oklab, var(--good) 20%, transparent);
+  background: color-mix(in oklab, var(--good) 6%, var(--surface));
+  border: 0;
   font-size: 12.5px;
   line-height: 1.5;
   color: var(--ink-2);
@@ -1597,7 +1530,7 @@ details > :not(summary) {
   height: 2px;
   border-radius: 2px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.07);
+  background: var(--line);
 }
 .live-bar span {
   position: absolute;
@@ -1612,7 +1545,7 @@ details > :not(summary) {
   gap: 6px;
   padding: 10px 12px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--surface-2);
   border: 1px solid var(--line);
 }
 .feed-h,
@@ -1620,11 +1553,9 @@ details > :not(summary) {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--faint);
+  font-size: 11.5px;
+  font-weight: 540;
+  color: var(--muted);
 }
 .feed-h svg,
 .ksteps-h svg {
@@ -1656,7 +1587,7 @@ details > :not(summary) {
   gap: 6px;
   padding: 10px 12px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--surface-2);
   border: 1px solid var(--line);
 }
 .ksteps ol {
@@ -1716,8 +1647,8 @@ details > :not(summary) {
   border-radius: 10px;
   font-size: 12.5px;
   color: var(--bad);
-  background: color-mix(in oklab, var(--bad) 10%, transparent);
-  border: 1px solid color-mix(in oklab, var(--bad) 25%, transparent);
+  background: color-mix(in oklab, var(--bad) 7%, transparent);
+  border: 0;
   animation: pop 0.4s var(--spring) both;
 }
 
@@ -1756,7 +1687,7 @@ details > :not(summary) {
 .shot:hover {
   border-color: var(--line-3);
   transform: translateY(-2px);
-  box-shadow: 0 14px 30px -14px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 14px 30px -14px rgba(20, 20, 24, 0.3);
 }
 .shot:hover img {
   transform: scale(1.06);
@@ -1774,8 +1705,8 @@ details > :not(summary) {
   font-size: 11px;
   font-weight: 560;
   color: #fff;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(6px);
+  background: rgba(20, 20, 24, 0.2);
+  backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(6px);
   opacity: 0;
   transform: translateY(4px);
@@ -1905,7 +1836,7 @@ details > :not(summary) {
   overflow: auto;
   padding: 10px 0;
   border-radius: 10px;
-  background: #060608;
+  background: var(--surface-2);
   border: 1px solid var(--line);
   font-family: var(--mono);
   font-size: 11px;
@@ -1947,17 +1878,15 @@ details > :not(summary) {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--mono);
-  font-size: 10.5px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--faint);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
   cursor: pointer;
   user-select: none;
   transition: color 0.15s var(--ease);
 }
 .audit > summary:hover {
-  color: var(--ink-2);
+  color: var(--accent);
 }
 .audit > summary .sp-h-note {
   margin-left: 4px;
@@ -1969,7 +1898,7 @@ details > :not(summary) {
   max-height: 300px;
   overflow: auto;
   border-radius: 10px;
-  background: #060608;
+  background: var(--surface-2);
   border: 1px solid var(--line);
 }
 .audit li {
@@ -2015,7 +1944,7 @@ details > :not(summary) {
   min-height: 48px;
   padding: 7px 8px 7px 14px;
   border-radius: 14px;
-  background: color-mix(in srgb, var(--raise) 80%, transparent);
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
   backdrop-filter: saturate(1.6) blur(16px);
   -webkit-backdrop-filter: saturate(1.6) blur(16px);
   box-shadow: var(--shadow-pop);
@@ -2060,8 +1989,9 @@ details > :not(summary) {
   overflow: hidden;
   isolation: isolate;
   text-align: center;
-  border: 1px solid var(--line);
+  border: 0;
   background: var(--surface);
+  box-shadow: var(--shadow);
 }
 .sp-empty > * {
   position: relative;
@@ -2088,16 +2018,14 @@ details > :not(summary) {
   height: 44px;
   border-radius: 14px;
   color: var(--accent);
-  background: color-mix(in oklab, var(--accent) 12%, var(--surface));
-  border: 1px solid color-mix(in oklab, var(--accent) 30%, transparent);
-  box-shadow: 0 0 30px -6px color-mix(in oklab, var(--accent) 60%, transparent);
+  background: color-mix(in oklab, var(--accent) 7%, var(--surface));
+  border: 1px solid color-mix(in oklab, var(--accent) 18%, transparent);
   animation: pop 0.6s var(--spring) both;
 }
 .is-offline .sp-empty-icon {
   color: var(--bad);
   background: color-mix(in oklab, var(--bad) 12%, var(--surface));
   border-color: color-mix(in oklab, var(--bad) 30%, transparent);
-  box-shadow: 0 0 30px -6px color-mix(in oklab, var(--bad) 60%, transparent);
 }
 .sp-empty h2 {
   font-size: 16px;
@@ -2117,7 +2045,7 @@ details > :not(summary) {
 .shimmer {
   height: 18px;
   border-radius: 6px;
-  background: linear-gradient(90deg, var(--surface) 0%, var(--raise) 50%, var(--surface) 100%);
+  background: linear-gradient(90deg, #ececea 0%, #f6f6f4 50%, #ececea 100%);
   background-size: 200% 100%;
   animation: shimmer 1.4s linear infinite;
 }
@@ -2153,7 +2081,7 @@ details > :not(summary) {
   grid-area: console;
   position: relative;
   z-index: 5;
-  background: #060607;
+  background: var(--surface);
   border-top: 1px solid var(--line);
 }
 .console-head {
@@ -2171,7 +2099,7 @@ details > :not(summary) {
   transition: background 0.15s var(--ease);
 }
 .console-head:hover {
-  background: rgba(255, 255, 255, 0.025);
+  background: var(--hover);
 }
 .console-head svg {
   flex: none;
@@ -2180,34 +2108,13 @@ details > :not(summary) {
   color: var(--faint);
 }
 .console-title {
-  font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 560;
+  color: var(--ink);
 }
 .console-live {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--mono);
-  font-size: 10.5px;
-  color: var(--faint);
-}
-.console-live::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--faint);
-}
-.console-live.is-live {
-  color: var(--good);
-}
-.console-live.is-live::before {
-  background: var(--good);
-  box-shadow: 0 0 8px var(--good);
-  animation: blink 2s ease-in-out infinite;
+  font-size: 12px;
+  color: var(--bad);
 }
 .console-peek {
   flex: 1;
@@ -2261,10 +2168,10 @@ details > :not(summary) {
   }
 }
 .cline:hover {
-  background: rgba(255, 255, 255, 0.025);
+  background: var(--hover);
 }
 .cline-at {
-  color: #45454d;
+  color: var(--faint);
 }
 .cline-src {
   color: var(--muted);
@@ -2282,7 +2189,7 @@ details > :not(summary) {
   color: var(--warn);
 }
 .cline-text {
-  color: #c8c8d0;
+  color: var(--ink-2);
   overflow-wrap: anywhere;
 }
 .cline-label {
@@ -2299,16 +2206,7 @@ details > :not(summary) {
   color: var(--bad);
 }
 .cline.is-dim .cline-text {
-  color: #6c6c76;
-}
-.cursor {
-  display: inline-block;
-  width: 7px;
-  height: 13px;
-  margin: 4px 0 0 18px;
-  background: var(--accent);
-  box-shadow: 0 0 8px var(--accent);
-  animation: blink 1.1s steps(2) infinite;
+  color: var(--muted);
 }
 
 /* ------------------------------------------------------------------ compose */
@@ -2385,7 +2283,7 @@ details > :not(summary) {
   padding: 0 11px;
   border-radius: 8px;
   border: 1px solid var(--line-2);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface);
   font-size: 12.5px;
   font-weight: 500;
   color: var(--ink-2);
@@ -2397,7 +2295,7 @@ details > :not(summary) {
     transform 0.18s var(--spring);
 }
 .chip-btn:hover {
-  background: rgba(255, 255, 255, 0.07);
+  background: var(--sunken);
   border-color: var(--line-3);
   color: var(--ink);
 }
@@ -2409,11 +2307,9 @@ details > :not(summary) {
   gap: 6px;
 }
 .field > span {
-  font-family: var(--mono);
-  font-size: 10.5px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--faint);
+  font-size: 12px;
+  font-weight: 540;
+  color: var(--ink-2);
 }
 .field input,
 .field select,
@@ -2424,7 +2320,7 @@ details > :not(summary) {
   padding: 9px 11px;
   border-radius: 10px;
   border: 1px solid var(--line-2);
-  background: var(--bg-1);
+  background: var(--surface);
   color: var(--ink);
   font-size: 13.5px;
   outline: none;
@@ -2442,8 +2338,8 @@ details > :not(summary) {
 .field textarea:focus,
 .spec-form input:focus,
 .spec-form textarea:focus {
-  border-color: color-mix(in oklab, var(--accent) 55%, transparent);
-  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 14%, transparent);
+  border-color: color-mix(in oklab, var(--accent) 50%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 10%, transparent);
 }
 .field input::placeholder,
 .field textarea::placeholder {
@@ -2473,8 +2369,7 @@ details > :not(summary) {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--mono);
-  font-size: 10.5px;
+  font-size: 12px;
   color: var(--muted);
 }
 
@@ -2500,11 +2395,10 @@ details > :not(summary) {
       'console console';
   }
   .panel {
-    border-left: 0;
     border-top: 1px solid var(--line);
   }
-  .top-status .chip-dim {
-    display: none;
+  .thread {
+    border-right: 0;
   }
 }
 

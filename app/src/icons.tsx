@@ -29,8 +29,8 @@ export function SeyrinMark({ size = 26, title }: { size?: number; title?: string
     <svg width={size} height={size} viewBox="0 0 32 32" role={title ? 'img' : undefined} aria-label={title} aria-hidden={title ? undefined : true}>
       <defs>
         <linearGradient id="seyrin-mark-g" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#1d1b33" />
-          <stop offset="1" stopColor="#6b5cf0" />
+          <stop offset="0" stopColor="#272a4d" />
+          <stop offset="1" stopColor="#5b4fd0" />
         </linearGradient>
       </defs>
       <rect width="32" height="32" rx="9" fill="url(#seyrin-mark-g)" />

@@ -83,7 +83,7 @@ export function KaneConsole({ open, onToggle, subjectFor }: { open: boolean; onT
       <button type="button" className="console-head" onClick={onToggle} aria-expanded={open} aria-controls="kane-console-body">
         <TerminalIcon />
         <span className="console-title">Kane console</span>
-        <span className={`console-live${live ? ' is-live' : ''}`}>{live ? 'live' : 'offline'}</span>
+        {live ? null : <span className="console-live">offline</span>}
         <span className="console-peek">{open ? (lines.length ? `${lines.length} lines` : '') : last ? `${last.at}  ${last.source}  ${last.text}` : 'Waiting for Kane…'}</span>
         <span className="console-toggle">
           <ChevronIcon className={open ? 'rot-90' : 'rot--90'} />
@@ -113,7 +113,6 @@ export function KaneConsole({ open, onToggle, subjectFor }: { open: boolean; onT
               </span>
             </div>
           ))}
-          {live ? <span className="cursor" aria-hidden="true" /> : null}
         </div>
       ) : null}
     </section>
