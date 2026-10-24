@@ -62,6 +62,35 @@ describe('extractReproHeuristic', () => {
     expect(spec.missing).toEqual([]);
   });
 
+  it('turns form values listed inline into fill steps, keeping the exact values', () => {
+    const spec = extractReproHeuristic(
+      {
+        subject: "Can't create an account with my email",
+        bodyText:
+          'Hello,\n\nI tried to sign up at http://localhost:4480/signup with name Dev Patel, email dev+perch@clayandkiln.com and studio Clay and Kiln, then clicked "Create account". I get an error: "Please enter a valid email address". It should have created the account.\n\nBest,\nDev',
+      },
+      ORIGINS,
+    );
+    expect(spec.url).toBe('http://localhost:4480/signup');
+    expect(spec.steps).toEqual([
+      "Enter name 'Dev Patel'",
+      "Enter email 'dev+perch@clayandkiln.com'",
+      "Enter studio 'Clay and Kiln'",
+      "Click 'Create account'",
+    ]);
+    expect(compileKaneObjective(spec)).toBe(
+      "Go to http://localhost:4480/signup, then enter name 'Dev Patel', then enter email 'dev+perch@clayandkiln.com', then enter studio 'Clay and Kiln', then click 'Create account', then verify the account is created",
+    );
+  });
+
+  it('never turns a password into a fill step', () => {
+    const spec = extractReproHeuristic(
+      { subject: 'Login broken', bodyText: 'I went to /login with email a@b.co and password hunter2, then clicked Log in. Nothing happens.' },
+      ORIGINS,
+    );
+    expect(spec.steps).toEqual(["Enter email 'a@b.co'", 'Click Log in']);
+  });
+
   it('drops injected instructions and steps that link elsewhere', () => {
     const spec = extractReproHeuristic(
       {

@@ -148,6 +148,17 @@ export function SeyrinPanel({ email, health, onTask, onUseReply }: Props) {
     return () => io.disconnect();
   }, [hasTask, taskId]);
 
+  // When the phase changes while the panel is open (Kane finished, a fix started, an approval is needed),
+  // bring the card with the result or the next action into view. Opening an email keeps the top in view.
+  const shownPhase = useRef<string | null>(null);
+  useEffect(() => {
+    if (!task) return;
+    const prev = shownPhase.current;
+    shownPhase.current = `${task.id}:${task.phase}`;
+    if (!prev || !prev.startsWith(`${task.id}:`) || prev === shownPhase.current) return;
+    cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, [task?.id, task?.phase]);
+
   // Elapsed time for the current stretch of work.
   const busy = task ? BUSY.has(task.phase) : false;
   const [busySince, setBusySince] = useState<number | null>(null);
@@ -402,20 +413,20 @@ function Safeguards({ policy, trust, title = 'Safeguards', compact = false }: { 
           <div className={`sg-tile tone-${TRUST[trust].tone}`} title={TRUST[trust].hint}>
             <span className="sg-k">Trust</span>
             <span className="sg-v">
-              <PersonIcon /> {TRUST[trust].label}
+              <PersonIcon /> <span>{TRUST[trust].label}</span>
             </span>
           </div>
         ) : null}
         <div className={`sg-tile tone-${risk.tone}`} title={risk.hint}>
           <span className="sg-k">Risk</span>
           <span className="sg-v">
-            <RiskIcon risk={policy.risk} /> {risk.label}
+            <RiskIcon risk={policy.risk} /> <span>{risk.label}</span>
           </span>
         </div>
         <div className={`sg-tile tone-${decision.tone}`} title={decision.hint}>
           <span className="sg-k">Decision</span>
           <span className="sg-v">
-            <DecisionIcon decision={policy.decision} /> {decision.label}
+            <DecisionIcon decision={policy.decision} /> <span>{decision.label}</span>
           </span>
         </div>
       </div>
@@ -546,6 +557,11 @@ type CardProps = {
   onEditSpec: (spec: Record<string, unknown>) => void;
 };
 
+/** A site change runs the coding agent, so approving it is pointless while the agent can't start. */
+function approveBlocked(props: { task: Task; fixReady: boolean }): boolean {
+  return props.task.kind === 'site_change' && !props.fixReady;
+}
+
 function StateCard(props: CardProps) {
   const { task, now, busySince, liveRun, pending } = props;
   const latest = task.run;
@@ -592,14 +608,20 @@ function StateCard(props: CardProps) {
           </div>
           <p>{task.detail || 'Nothing runs until you approve it.'}</p>
           <div className="row">
-            <button type="button" className="btn btn-primary" onClick={props.onApprove} disabled={Boolean(pending)}>
-              {pending === 'approve' ? 'Starting…' : 'Approve & run'}
-            </button>
+            <span title={approveBlocked(props) ? `${agentName(props.fixAgent)} isn't ready. Check the server's startup log.` : undefined}>
+              <button type="button" className="btn btn-primary" onClick={props.onApprove} disabled={approveBlocked(props) || Boolean(pending)}>
+                {pending === 'approve' ? 'Starting…' : 'Approve & run'}
+              </button>
+            </span>
             <button type="button" className="btn btn-ghost" onClick={props.onDismiss} disabled={Boolean(pending)}>
               Dismiss
             </button>
           </div>
-          <p className="fine">Kane checks the result before anything reaches {task.requester.name?.split(' ')[0] || 'them'}. Every change can be undone.</p>
+          <p className="fine">
+            {approveBlocked(props)
+              ? `This change needs ${agentName(props.fixAgent)} to edit ${task.app?.name || 'the site'}'s code, and it isn't ready on this machine, so approving is off.`
+              : `Kane checks the result before anything reaches ${task.requester.name?.split(' ')[0] || 'them'}. Every change can be undone.`}
+          </p>
         </section>
       );
 
@@ -801,7 +823,7 @@ function ActionBar(props: {
           <strong>Needs your approval</strong>
         </span>
         {jump('Review')}
-        <button type="button" className="btn btn-primary btn-sm" onClick={props.onApprove} disabled={Boolean(pending)}>
+        <button type="button" className="btn btn-primary btn-sm" onClick={props.onApprove} disabled={approveBlocked(props) || Boolean(pending)} title={approveBlocked(props) ? 'The coding agent is not ready' : undefined}>
           Approve &amp; run
         </button>
       </>

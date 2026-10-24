@@ -265,6 +265,14 @@ export function createTasks({ config, core, baseUrl }) {
     return phase(task, 'error', check.detail);
   }
 
+  /** Why the app's coding agent can't run right now, or null when it can. */
+  function agentBlocked(task) {
+    const app = config.apps.find((a) => a.id === task.appId);
+    if (!app?.repo || !app.fixAgent) return 'This app has no repository or coding agent configured.';
+    if (!agentReady(app.fixAgent)) return `The ${agentLabel(app.fixAgent)} agent is not ready (for OpenAI, add OPENAI_API_KEY to seyrin/.env).`;
+    return null;
+  }
+
   async function doFix(task) {
     const app = config.apps.find((a) => a.id === task.appId);
     if (!app?.repo || !app.fixAgent) throw new Error('This app has no repository or coding agent configured.');
@@ -392,6 +400,11 @@ export function createTasks({ config, core, baseUrl }) {
       const task = tasks.get(id);
       if (!task) return null;
       if (task.phase !== 'awaiting_approval') return view(task);
+      // A site change needs the coding agent; refuse up front instead of failing after the approval.
+      if (task.kind === 'site_change') {
+        const blocked = agentBlocked(task);
+        if (blocked) return { blocked };
+      }
       log(task, 'policy', 'You approved the plan.');
       execute(task);
       return view(task);
@@ -409,6 +422,8 @@ export function createTasks({ config, core, baseUrl }) {
       const task = tasks.get(id);
       if (!task) return null;
       if (task.phase !== 'reproduced' && !(task.phase === 'failed' && task.kind === 'bug_report')) return view(task);
+      const blocked = agentBlocked(task);
+      if (blocked) return { blocked };
       log(task, 'policy', 'You approved the fix.');
       doFix(task).catch((error) => {
         log(task, 'seyrin', `Error: ${error.message}`);

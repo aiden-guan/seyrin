@@ -898,6 +898,7 @@ a {
 .sg-v {
   display: flex;
   align-items: center;
+  min-width: 0;
   gap: 6px;
   font-size: 13px;
   font-weight: 650;
@@ -906,6 +907,15 @@ a {
 }
 .sg-v svg {
   flex: none;
+}
+/* Narrow panels (1280 px screens): drop the icons so "Runs automatically" fits inside its tile. */
+.sg-grid {
+  container-type: inline-size;
+}
+@container (max-width: 380px) {
+  .sg-v svg {
+    display: none;
+  }
 }
 .sg-reasons {
   list-style: none;
@@ -2183,6 +2193,14 @@ details[open] > summary .chev {
 }
 .action-bar .elapsed {
   margin-left: 0;
+}
+
+/* Laptop and projector heights (1440×900, 1280×800, 1280×720): keep the console short so the
+   task card, not the log, gets the room. */
+@media (max-height: 940px) and (min-width: 761px) {
+  .console-body {
+    height: 96px;
+  }
 }
 
 /* Long, unbreakable live text (Kane remarks, the action bar) must never widen the panel. */

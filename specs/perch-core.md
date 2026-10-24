@@ -15,7 +15,11 @@ Compile with `node gate/spec-to-flows.mjs specs/perch-core.md`.
 
 - home_start_free: Go to /, then click the "Start free" button, then verify the page that opens has the heading "Create your studio"
 - signup_basic: Go to /signup, then fill in "Your name" with "Sam Lee", "Email" with "sam@example.com" and "Studio name" with "Clay Corner", then click "Create account", then verify a welcome message naming Sam ("Welcome to Perch, Sam!") is shown
-- pricing_plans: Go to /pricing, then verify the page lists three plans with their monthly prices: Free at $0, Pro at $12 and Team at $29
+- pricing_plans: Go to /pricing, then verify the page lists three plans, Free, Pro and Team, each with a monthly price
+
+Prices are left out of `pricing_plans` on purpose: they change by request ("change the Pro price to
+$15"), and Seyrin saves each verified change as its own `change_*` flow. A flow that pinned today's
+prices would go red the moment an approved change landed.
 
 ## Not covered yet
 
