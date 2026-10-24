@@ -64,7 +64,7 @@ if (command === 'run') {
     mkdirSync(dir, { recursive: true });
     writeFileSync(resolve(dir, `${name}_test.md`), `---\nname: ${name}\nobjective: ${JSON.stringify(objective)}\n---\n\n## ${objective}\n`);
   }
-  emit({ type: 'run_end', status: result.status, summary: result.reason, one_liner: result.reason, reason: result.reason, duration: (Date.now() - started) / 1000, credits_consumed: 0, final_state: {}, session_dir: result.sessionDir, result_code: result.status === 'passed' ? 0 : 1 });
+  emit({ type: 'run_end', status: result.status, summary: result.reason, one_liner: result.reason, reason: result.reason, duration: (Date.now() - started) / 1000, credits_consumed: 0, final_state: {}, session_dir: result.sessionDir, result_code: result.status === 'passed' ? 0 : 740 });
   process.exit(result.status === 'passed' ? 0 : 1);
 }
 

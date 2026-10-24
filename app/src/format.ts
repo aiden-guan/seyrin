@@ -40,7 +40,7 @@ export function rowState(phase: TaskPhase): { label: string; tone: Tone; needsYo
     case 'awaiting_approval':
       return { label: 'Needs you', tone: 'warn', needsYou: true };
     case 'reproduced':
-      return { label: 'Bug confirmed', tone: 'warn', needsYou: true };
+      return { label: 'Reproduced', tone: 'warn', needsYou: true };
     case 'needs_info':
       return { label: 'Needs you', tone: 'warn', needsYou: true };
     case 'refused':
