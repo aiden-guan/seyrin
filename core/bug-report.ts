@@ -229,6 +229,8 @@ export function verdictFromRun(exitCode: number | null, runEnd: KaneRunEnd | nul
   if (exitCode === 2 || (!runEnd && exitCode !== 0)) {
     return { verdict: 'error', detail: detail || 'Kane CLI did not start the run.' };
   }
+  // Exit 0 with no run_end is a stream that ended early: there is no result to call a pass.
+  if (!runEnd) return { verdict: 'error', detail: 'Kane CLI exited without reporting a result.' };
   if (exitCode === 3) return { verdict: 'error', detail: detail || 'The run timed out or was canceled.' };
   if (String(runEnd?.result_code ?? '') === '740') {
     const severity = runEnd?.verdict?.severity ? `${runEnd.verdict.severity} ` : '';

@@ -186,6 +186,10 @@ describe('verdictFromRun', () => {
     expect(verdictFromRun(3, null).verdict).toBe('error');
     expect(verdictFromRun(1, null).verdict).toBe('error');
   });
+
+  it('does not count exit 0 without a run_end as a pass', () => {
+    expect(verdictFromRun(0, null)).toEqual({ verdict: 'error', detail: 'Kane CLI exited without reporting a result.' });
+  });
 });
 
 describe('draftReproReply', () => {

@@ -1,6 +1,6 @@
 {
-  "at": "2026-10-24T23:08:41.906Z",
-  "commit": "01ef917",
+  "at": "2026-10-24T23:22:51.871Z",
+  "commit": "b07c3bb",
   "extractor": "heuristic",
   "safeguards": {
     "summary": {
@@ -993,14 +993,14 @@
         "group": "Reproduce (Maya's bug report)",
         "name": "silent0",
         "expect": "error",
-        "phase": "not_reproduced",
+        "phase": "error",
         "kaneRuns": 1,
         "agentRuns": 0,
         "attempts": 0,
         "verdicts": [
           "silent0"
         ],
-        "asExpected": false,
+        "asExpected": true,
         "broken": [],
         "undone": null,
         "regressionTest": null,
@@ -1215,18 +1215,18 @@
         "group": "Fix loop (after a 740 reproduce)",
         "name": "Kane exits 0 with no result",
         "expect": "failed",
-        "phase": "done",
-        "kaneRuns": 2,
-        "agentRuns": 1,
-        "attempts": 1,
+        "phase": "failed",
+        "kaneRuns": 4,
+        "agentRuns": 3,
+        "attempts": 3,
         "verdicts": [
           "bug740",
-          "silent0"
+          "silent0",
+          "unscripted",
+          "unscripted"
         ],
-        "asExpected": false,
-        "broken": [
-          "called done after a Kane run that did not pass (silent0)"
-        ],
+        "asExpected": true,
+        "broken": [],
         "undone": null,
         "regressionTest": null,
         "bugDetection": "stop"
@@ -1324,17 +1324,15 @@
         "group": "Document",
         "name": "Kane exits 0 with no result",
         "expect": "error",
-        "phase": "done",
+        "phase": "error",
         "kaneRuns": 1,
         "agentRuns": 0,
         "attempts": 1,
         "verdicts": [
           "silent0"
         ],
-        "asExpected": false,
-        "broken": [
-          "called done after a Kane run that did not pass (silent0)"
-        ],
+        "asExpected": true,
+        "broken": [],
         "undone": null,
         "regressionTest": null,
         "bugDetection": null
@@ -1424,21 +1422,6 @@
           "phase": "done",
           "broken": [
             "[efficiency] 3 Kane runs for 2 attempts that could have changed something"
-          ]
-        },
-        {
-          "kane": [
-            "bug740",
-            "error2",
-            "silent0"
-          ],
-          "agent": [
-            "noop",
-            "edit"
-          ],
-          "phase": "done",
-          "broken": [
-            "called done after a Kane run that did not pass (silent0)"
           ]
         },
         {
@@ -1647,23 +1630,6 @@
         {
           "kane": [
             "bug740",
-            "fail",
-            "error2",
-            "silent0"
-          ],
-          "agent": [
-            "edit",
-            "edit",
-            "edit"
-          ],
-          "phase": "done",
-          "broken": [
-            "called done after a Kane run that did not pass (silent0)"
-          ]
-        },
-        {
-          "kane": [
-            "bug740",
             "error2",
             "garbage",
             "pass"
@@ -1676,23 +1642,6 @@
           "phase": "done",
           "broken": [
             "[efficiency] 3 Kane runs for 1 attempts that could have changed something"
-          ]
-        },
-        {
-          "kane": [
-            "bug740",
-            "error2",
-            "error2",
-            "silent0"
-          ],
-          "agent": [
-            "edit",
-            "noop",
-            "edit"
-          ],
-          "phase": "done",
-          "broken": [
-            "called done after a Kane run that did not pass (silent0)"
           ]
         },
         {
@@ -1778,20 +1727,6 @@
           "phase": "failed",
           "broken": [
             "[efficiency] 3 Kane runs for 2 attempts that could have changed something"
-          ]
-        },
-        {
-          "kane": [
-            "bug740",
-            "silent0"
-          ],
-          "agent": [
-            "fail",
-            "edit"
-          ],
-          "phase": "done",
-          "broken": [
-            "called done after a Kane run that did not pass (silent0)"
           ]
         },
         {
@@ -2056,13 +1991,13 @@
         }
       ],
       "phases": {
-        "done": 120,
-        "failed": 80
+        "done": 117,
+        "failed": 83
       },
-      "kaneRuns": 619,
+      "kaneRuns": 621,
       "withSilent": {
         "cases": 20,
-        "broken": 7
+        "broken": 3
       }
     },
     "seed": 20261024
