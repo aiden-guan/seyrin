@@ -12,6 +12,7 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "demo:reset": "curl -s -X POST http://127.0.0.1:4477/v1/admin/reset || true",
+    "demo:prepare": "node bench/scenario.mjs --prepare",
     "gate": "node gate/kane-gate.mjs --check demo-app",
     "gate:watch": "node gate/kane-gate.mjs --watch demo-app",
     "suite": "cd demo-app && kane-cli testrun run --agent --name \"Perch regression suite\"",

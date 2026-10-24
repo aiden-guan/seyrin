@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Drive the demo inbox through Seyrin's API from a clean reset, approving what a person would approve,
 // so the benchmark measures complete runs. Uses the same fixture mail as the inbox app.
+// --prepare stops before anything that needs approval, leaving Approve and Fix it for a live demo.
 const server = process.env.SEYRIN_URL || 'http://127.0.0.1:4477';
 const { FIXTURES } = await import(new URL('../app/src/fixtures.ts', import.meta.url).href);
 const post = (path, body) => fetch(`${server}${path}`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: body ? JSON.stringify(body) : undefined }).then((r) => r.json());
@@ -22,11 +23,12 @@ for (const mail of FIXTURES) {
     continue;
   }
   let task = await settle(created.id, DONE);
-  if (task.phase === 'awaiting_approval') {
+  const prepare = process.argv.includes('--prepare');
+  if (task.phase === 'awaiting_approval' && !prepare) {
     await post(`/v1/tasks/${task.id}/approve`);
     task = await settle(task.id, ['done', 'failed', 'error']);
   }
-  if (task.phase === 'reproduced' && task.app?.canFix) {
+  if (task.phase === 'reproduced' && task.app?.canFix && !prepare) {
     await post(`/v1/tasks/${task.id}/fix`);
     task = await settle(task.id, ['done', 'failed', 'error']);
   }
