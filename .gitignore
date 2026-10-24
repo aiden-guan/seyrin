@@ -5,3 +5,6 @@ app/dist/
 **/.testmuai/kane-gate.json
 **/.testmuai/evidence/
 .DS_Store
+
+# Kane evidence packs include the TestMu account email; publish deliberately
+evidence/

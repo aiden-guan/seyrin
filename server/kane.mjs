@@ -29,7 +29,12 @@ export function createKaneRunner({ config }) {
       const args = ['run', job.objective, '--agent', '--url', job.url, '--max-steps', String(config.server.maxSteps), '--timeout', String(config.server.runTimeoutSeconds)];
       if (!config.server.headed) args.push('--headless');
       if (job.name) args.push('--name', job.name);
-      const [cmd, argv] = kaneCommand(args);
+      let [cmd, argv] = kaneCommand(args);
+      // Hack-day run reports: `kanehack report` runs Kane, passes its NDJSON through, and records a redacted summary.
+      if (process.env.KANEHACK_REPORT === '1' && !process.env.KANE_CLI_BIN) {
+        argv = ['report', '--objective', job.objective, ...(process.env.SEYRIN_COMMIT ? ['--commit', process.env.SEYRIN_COMMIT] : []), '--', cmd, ...argv];
+        cmd = 'kanehack';
+      }
       const run = { label: job.label, attempt: job.attempt, objective: job.objective, startedAt: new Date().toISOString(), endedAt: null, steps: [], exitCode: null, runEnd: null, sessionDir: null, screenshot: null, evidencePack: null, stderr: '' };
       hooks.onStart?.(run);
       let child;

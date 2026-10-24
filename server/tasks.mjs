@@ -214,7 +214,8 @@ export function createTasks({ config, core, baseUrl }) {
       attempt.verdict = check.verdict;
       attempt.detail = check.detail;
       if (check.verdict === 'not_reproduced') {
-        const proof = check.run.runEnd?.one_liner || `Kane opened the document and found every requested section.`;
+        const facts = core.keyFacts(task.spec.context);
+        const proof = `Kane opened it in a browser and found all ${task.spec.sections.length} sections (${task.spec.sections.join(', ')})${facts.length ? ` and the details you gave (${facts.join(', ')})` : ''}`;
         task.result = { verified: true, link, proof };
         task.draftReply = core.draftTaskReply({ kind: 'document', outcome: 'done', senderName: task.requester.name, link, proof, ask: task.ask });
         log(task, 'seyrin', `Done and verified by Kane: ${proof}`);

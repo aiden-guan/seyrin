@@ -79,7 +79,7 @@ describe('compileDocumentCheck and draftTaskReply', () => {
   it('checks every requested section and replies with the link and the proof', () => {
     const spec = extractDocumentHeuristic(docAsk);
     expect(compileDocumentCheck('http://localhost:4477/d/acme', spec)).toBe(
-      'Go to http://localhost:4477/d/acme, then verify the page shows a document titled "Acme Yoga Pilot one-pager" with sections "Pricing", "Timeline" and "Next steps", each with written content under it',
+      'Go to http://localhost:4477/d/acme, then verify the page shows a document titled "Acme Yoga Pilot one-pager" with sections "Pricing", "Timeline" and "Next steps", each with written content under it, and that the document states "3 studios", "Nov 15" and "$12"',
     );
     const reply = draftTaskReply({ kind: 'document', outcome: 'done', senderName: 'Jordan Reyes', link: 'http://localhost:4477/d/acme', proof: 'All three sections are on the page.', ask: '' });
     expect(reply).toMatch(/^Hi Jordan,[\s\S]*http:\/\/localhost:4477\/d\/acme[\s\S]*all three sections are on the page\./);

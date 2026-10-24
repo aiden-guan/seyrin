@@ -136,11 +136,22 @@ export function finaliseSiteChange(raw: { url?: unknown; change?: unknown; expec
   };
 }
 
-/** Kane's check for a written document: the page exists and has every requested section. */
+/** Numbers, prices and dates from the request that the document must get right: where writers hallucinate. */
+export function keyFacts(context: string[]): string[] {
+  const facts = new Set<string>();
+  const re = /\$\d[\d,.]*|\b\d+\s+(?:days?|weeks?|months?|studios?|seats?|users?)\b|\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.?\s+\d{1,2}\b/gi;
+  for (const line of context) for (const match of line.matchAll(re)) facts.add(match[0].trim());
+  return [...facts].slice(0, 6);
+}
+
+const listOf = (items: string[]) => (items.length > 1 ? `${items.slice(0, -1).join(', ')} and ${items.at(-1)}` : items[0] || '');
+
+/** Kane's check for a written document: every requested section, and the request's facts, on the page. */
 export function compileDocumentCheck(docUrl: string, spec: DocumentSpec): string {
-  const sections = spec.sections.map((s) => `"${s}"`);
-  const list = sections.length > 1 ? `${sections.slice(0, -1).join(', ')} and ${sections.at(-1)}` : sections[0];
-  return `Go to ${docUrl}, then verify the page shows a document titled "${spec.title}" with sections ${list}, each with written content under it`;
+  const sections = listOf(spec.sections.map((s) => `"${s}"`));
+  const facts = keyFacts(spec.context);
+  const factCheck = facts.length ? `, and that the document states ${listOf(facts.map((f) => `"${f}"`))}` : '';
+  return `Go to ${docUrl}, then verify the page shows a document titled "${spec.title}" with sections ${sections}, each with written content under it${factCheck}`;
 }
 
 export function compileSiteCheck(spec: SiteChangeSpec): string | null {
