@@ -1,0 +1,173 @@
+{
+  "builtAt": "2026-10-24T23:16:51.265Z",
+  "measuredAt": "2026-10-24T18:55:43.591Z",
+  "samples": 10000,
+  "seed": 20261024,
+  "range": {
+    "independent": {
+      "human": {
+        "p5": 5343.371384440549,
+        "p50": 6108.093213374813,
+        "p95": 6930.563046239783,
+        "min": 4637.946661588864,
+        "max": 7971.448059218408
+      },
+      "attention": {
+        "p5": 123.19048070907593,
+        "p50": 162.86646735072136,
+        "p95": 204.23214392662052,
+        "min": 119.20086324214935,
+        "max": 208.59943516254427
+      },
+      "saved": {
+        "p5": 5177.171045243483,
+        "p50": 5946.0661035756075,
+        "p95": 6769.314939091536,
+        "min": 4472.9548600945045,
+        "max": 7818.506971590998
+      },
+      "share": {
+        "p5": 0.9649608837693211,
+        "p50": 0.9733345968048421,
+        "p95": 0.9803946499431275,
+        "min": 0.9571152356572632,
+        "max": 0.984215900534517
+      }
+    },
+    "correlated": {
+      "human": {
+        "p5": 3669.7552717008643,
+        "p50": 5922.282662416342,
+        "p95": 8989.090646223294,
+        "min": 2748.7483833748697,
+        "max": 10384.267463850314
+      },
+      "attention": {
+        "p5": 123.19048070907593,
+        "p50": 162.84491560459136,
+        "p95": 204.05719351768494,
+        "min": 119.20086324214935,
+        "max": 208.59943516254427
+      },
+      "saved": {
+        "p5": 3546.5647909917884,
+        "p50": 5759.43774681175,
+        "p95": 8785.03345270561,
+        "min": 2629.5475201327204,
+        "max": 10175.668028687769
+      },
+      "share": {
+        "p5": 0.9664308730178677,
+        "p50": 0.9725030153258255,
+        "p95": 0.9772994620314105,
+        "min": 0.9566344944618771,
+        "max": 0.9799119739655473
+      }
+    }
+  },
+  "ladder": [
+    {
+      "label": "As published",
+      "why": "Typical time for every step (bench/comparison.md)",
+      "human": 5289,
+      "attention": 149,
+      "saved": 5140,
+      "share": 0.9718283229343921
+    },
+    {
+      "label": "No regression tests",
+      "why": "Assume the person would not write a test (2 × 15 min removed)",
+      "human": 3489,
+      "attention": 149,
+      "saved": 3340,
+      "share": 0.9572943536830038
+    },
+    {
+      "label": "…and a fast person",
+      "why": "Every remaining step at its low case",
+      "human": 1835,
+      "attention": 149,
+      "saved": 1686,
+      "share": 0.9188010899182562
+    },
+    {
+      "label": "…and only published rates",
+      "why": "Also drop every step priced by an assumption (finding and fixing the bug, planning, gathering facts)",
+      "human": 1003,
+      "attention": 149,
+      "saved": 854,
+      "share": 0.8514456630109671
+    },
+    {
+      "label": "…and a careful, slow owner",
+      "why": "Owner also reads the whole doc, reviews each diff (60 s), opens Kane's screenshot, all at 1.4× reading time",
+      "human": 1003,
+      "attention": 662.1023529411765,
+      "saved": 340.8976470588235,
+      "share": 0.3398780130197642
+    }
+  ],
+  "machine": [
+    {
+      "subject": "One-pager for the Acme Yoga pilot",
+      "kind": "document",
+      "outcome": "done",
+      "total": 49,
+      "kane": 42,
+      "other": 7,
+      "runs": 1,
+      "firstVerdict": 49,
+      "human": 1492
+    },
+    {
+      "subject": "Upgrade button does nothing",
+      "kind": "bug_report",
+      "outcome": "done",
+      "total": 118,
+      "kane": 113,
+      "other": 5,
+      "runs": 2,
+      "firstVerdict": 77,
+      "human": 1639
+    },
+    {
+      "subject": "Pro price → $15",
+      "kind": "site_change",
+      "outcome": "done",
+      "total": 37,
+      "kane": 32,
+      "other": 5,
+      "runs": 1,
+      "firstVerdict": 37,
+      "human": 289
+    },
+    {
+      "subject": "Can't create an account with my email",
+      "kind": "bug_report",
+      "outcome": "done",
+      "total": 125,
+      "kane": 120,
+      "other": 5,
+      "runs": 2,
+      "firstVerdict": 62,
+      "human": 1641
+    },
+    {
+      "subject": "Pricing page is blank for me",
+      "kind": "bug_report",
+      "outcome": "not_reproduced",
+      "total": 34,
+      "kane": 31,
+      "other": 3,
+      "runs": 1,
+      "firstVerdict": 34,
+      "human": 228
+    }
+  ],
+  "worst": {
+    "runs": 15,
+    "slowestRun": 75,
+    "timeout": 240,
+    "otherTotal": 25
+  }
+}
