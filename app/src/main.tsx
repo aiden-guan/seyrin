@@ -1,13 +1,16 @@
 // Seyrin inbox: a demo mailbox for the founder of Perch, with Seyrin working beside every email.
-import { StrictMode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { StrictMode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { classifyRequest } from '../../core/intent.ts';
 import { api, onEvent, type Health, type OutgoingEmail, type Person, type Task, type TaskSummary, type Trust } from './api.ts';
 import { KaneConsole } from './console.tsx';
 import { FIXTURES, ME, PERCH_URL, STARTERS, type DemoMail } from './fixtures.ts';
 import { KIND_LABEL, TRUST, fmtAgo, fmtWhen, initials, rowState } from './format.ts';
-import { ArrowOutIcon, ComposeIcon, CrossIcon, InboxIcon, RetryIcon, SeyrinMark } from './icons.tsx';
+import { ArrowOutIcon, ComposeIcon, CrossIcon, KindIcon, RetryIcon, SeyrinMark } from './icons.tsx';
 import { SeyrinPanel } from './panel.tsx';
+import '@fontsource-variable/geist';
+import '@fontsource-variable/geist-mono';
+import '@fontsource/jersey-15/400.css';
 import './app.css';
 
 const CUSTOM_KEY = 'seyrin-inbox-custom';
@@ -217,31 +220,28 @@ function App() {
 
       <aside className="list" aria-label="Inbox">
         <div className="list-head">
-          <div className="list-title">
-            <InboxIcon />
-            <h2>Inbox</h2>
-            <span className="count">{mails.length}</span>
-            {needsYou ? (
-              <span className="needs" title="Tasks waiting for your decision">
-                {needsYou} need{needsYou === 1 ? 's' : ''} you
-              </span>
-            ) : null}
-          </div>
-          <button type="button" className="btn btn-primary btn-compose" onClick={() => setComposing(true)}>
-            <ComposeIcon /> Write an email
+          <h2>Inbox</h2>
+          <span className="count">{mails.length}</span>
+          {needsYou ? (
+            <span key={needsYou} className="needs" data-tip="Waiting for your decision">
+              {needsYou} need{needsYou === 1 ? 's' : ''} you
+            </span>
+          ) : null}
+          <button type="button" className="icon-btn icon-btn-solid" onClick={() => setComposing(true)} aria-label="Write an email" data-tip="Write an email" data-tip-pos="left">
+            <ComposeIcon />
           </button>
         </div>
-        <ul className="rows">
-          {mails.map((mail) => (
-            <li key={mail.threadId}>
+        <Rows openId={open.threadId} watch={board}>
+          {mails.map((mail, i) => (
+            <li key={mail.threadId} data-thread={mail.threadId} style={{ ['--i' as string]: i }}>
               <MailRow mail={mail} open={mail.threadId === open.threadId} summary={board[mail.threadId]} now={now} onOpen={() => setOpenId(mail.threadId)} />
             </li>
           ))}
-        </ul>
+        </Rows>
       </aside>
 
       <main className="thread" aria-labelledby="thread-subject">
-        <article className="thread-inner">
+        <article className="thread-inner" key={open.threadId}>
           <h1 id="thread-subject">{open.subject}</h1>
           <div className="from">
             <span className={`avatar tone-${TRUST[trust.trust].tone}`} aria-hidden="true">
@@ -256,7 +256,7 @@ function App() {
                 </span>
               </div>
               <div className="from-meta">
-                to {ME.email} · {fmtWhen(received)}
+                {fmtWhen(received)}
                 {trust.note ? <span className={trust.note.startsWith('Not ') ? 'warn-note' : undefined}> · {trust.note}</span> : null}
               </div>
             </div>
@@ -272,20 +272,22 @@ function App() {
               placeholder={`Reply to ${open.from.name.split(' ')[0]}…`}
               value={replies[open.threadId] || ''}
               onChange={(e) => setReplies({ ...replies, [open.threadId]: e.target.value })}
-              rows={7}
+              rows={5}
             />
             <div className="reply-bar">
-              <button type="button" className="btn btn-primary" disabled aria-describedby="send-note">
-                Send
-              </button>
-              <span id="send-note" className="fine">
-                Demo inbox. Nothing is sent.
-              </span>
               {replies[open.threadId] ? (
                 <button type="button" className="btn btn-ghost btn-sm" onClick={() => setReplies({ ...replies, [open.threadId]: '' })}>
                   Clear
                 </button>
               ) : null}
+              <span data-tip="Demo inbox: nothing is sent" data-tip-pos="left">
+                <button type="button" className="btn btn-primary btn-sm" disabled aria-describedby="send-note">
+                  Send
+                </button>
+              </span>
+              <span id="send-note" className="sr-only">
+                Demo inbox. Nothing is sent.
+              </span>
             </div>
           </div>
         </article>
@@ -315,58 +317,77 @@ function App() {
 
 function TopBar({ health, down, resetting, onReset }: { health: Health | null; down: boolean; resetting: boolean; onReset: () => void }) {
   const perch = health?.apps?.find((a) => a.id === 'perch') || health?.apps?.find((a) => a.canFix) || null;
+  const kaneOk = Boolean(health?.kane.installed && health.kane.signedIn);
   return (
     <header className="top">
       <div className="brand">
-        <SeyrinMark size={26} title="Seyrin" />
+        <SeyrinMark size={22} title="Seyrin" />
         <span className="wordmark">Seyrin</span>
-        <span className="top-sep" aria-hidden="true" />
-        <span className="top-where">
-          Inbox · {ME.email} · <span className="demo-tag">demo</span>
-        </span>
       </div>
       <div className="top-status" aria-label="System status">
         {down ? (
-          <span className="pill tone-bad">
-            <span className="dot" /> Seyrin server offline · run npm start
+          <span className="chip tone-bad" data-tip="Run npm start">
+            <span className="dot" /> Server offline
           </span>
         ) : null}
         {health ? (
           <>
             <span
-              className={`pill tone-${health.kane.installed && health.kane.signedIn ? 'good' : 'warn'}`}
-              title={health.kane.fake ? 'Using the offline Kane stand-in' : 'Kane CLI on this machine'}
+              className={`chip tone-${kaneOk ? 'good' : 'warn'}`}
+              data-tip={`${health.kane.installed ? `Kane CLI ${health.kane.version || ''}${health.kane.fake ? ' (offline stand-in)' : ''}` : 'Kane CLI missing'}${health.kane.installed ? (health.kane.signedIn ? ', signed in' : ', not signed in') : ''}`}
             >
               <span className="dot" />
-              {health.kane.installed ? `Kane CLI ${health.kane.version || ''}` : 'Kane CLI missing'}
-              {health.kane.fake ? ' · stand-in' : ''}
-              {health.kane.installed ? (health.kane.signedIn ? ' · signed in' : ' · not signed in') : ''}
+              Kane{health.kane.installed && health.kane.version ? <span className="chip-dim">{health.kane.fake ? 'stand-in' : health.kane.version}</span> : null}
             </span>
-            <span className={`pill tone-${health.openai ? 'good' : 'neutral'}`} title={health.openai ? 'OpenAI understands emails and plans work' : 'Heuristics only: set OPENAI_API_KEY to use OpenAI'}>
+            <span className={`chip tone-${health.openai ? 'good' : 'neutral'}`} data-tip={health.openai ? 'OpenAI reads emails and plans work' : 'Off: set OPENAI_API_KEY'}>
               <span className="dot" />
-              OpenAI {health.openai ? 'on' : 'off'}
+              OpenAI
             </span>
             {perch ? (
-              <span className={`pill tone-${perch.fixReady ? 'good' : 'warn'}`} title={`Fix agent for ${perch.name}: ${perch.fixAgent || 'none'}`}>
+              <span className={`chip tone-${perch.fixReady ? 'good' : 'warn'}`} data-tip={`${perch.name} fix agent: ${perch.fixAgent || 'none'}${perch.fixReady ? '' : ' (not ready)'}`}>
                 <span className="dot" />
-                {perch.name} fix agent {perch.fixReady ? 'ready' : 'not ready'}
+                Fix agent
               </span>
             ) : null}
           </>
         ) : null}
       </div>
       <nav className="top-links" aria-label="Demo links">
-        <a className="link" href={PERCH_URL} target="_blank" rel="noreferrer">
-          Open Perch <ArrowOutIcon />
+        <a className="top-link" href={PERCH_URL} target="_blank" rel="noreferrer">
+          Perch <ArrowOutIcon />
         </a>
-        <a className="link" href="/d" target="_blank" rel="noreferrer">
-          Seyrin Docs <ArrowOutIcon />
+        <a className="top-link" href="/d" target="_blank" rel="noreferrer">
+          Docs <ArrowOutIcon />
         </a>
-        <button type="button" className="btn btn-ghost btn-sm" onClick={onReset} disabled={resetting}>
-          <RetryIcon /> {resetting ? 'Resetting…' : 'Reset demo'}
+        <button type="button" className={`icon-btn${resetting ? ' is-spinning' : ''}`} onClick={onReset} disabled={resetting} aria-label={resetting ? 'Resetting…' : 'Reset demo'} data-tip="Reset demo" data-tip-pos="left">
+          <RetryIcon />
         </button>
       </nav>
     </header>
+  );
+}
+
+/** The inbox list, with one highlight that glides to the open row instead of jumping. */
+function Rows({ openId, watch, children }: { openId: string; watch: unknown; children: ReactNode }) {
+  const listRef = useRef<HTMLUListElement>(null);
+  const [box, setBox] = useState<{ y: number; h: number } | null>(null);
+  const place = useCallback(() => {
+    const row = listRef.current?.querySelector<HTMLElement>(`li[data-thread="${CSS.escape(openId)}"]`);
+    if (row) setBox({ y: row.offsetTop, h: row.offsetHeight });
+  }, [openId]);
+  useLayoutEffect(place, [place, watch]);
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(place);
+    ro.observe(list);
+    return () => ro.disconnect();
+  }, [place]);
+  return (
+    <ul className="rows" ref={listRef}>
+      {box ? <span className="row-glow" aria-hidden="true" style={{ transform: `translateY(${box.y}px)`, height: box.h }} /> : null}
+      {children}
+    </ul>
   );
 }
 
@@ -384,10 +405,14 @@ function MailRow({ mail, open, summary, now, onOpen }: { mail: DemoMail; open: b
       <span className="row-snippet">{mail.bodyText.replace(/\s+/g, ' ').slice(0, 110)}</span>
       {kind || state ? (
         <span className="row-tags">
-          {kind ? <span className={`tag kind-${kind}`}>{KIND_LABEL[kind]}</span> : null}
+          {kind ? (
+            <span className={`kind kind-${kind}`}>
+              <KindIcon kind={kind} size={12} /> {KIND_LABEL[kind]}
+            </span>
+          ) : null}
           {state ? (
-            <span className={`row-state tone-${state.tone}`}>
-              <span className={state.live ? 'pulse' : 'dot'} aria-hidden="true" />
+            <span key={state.label} className={`row-state tone-${state.tone}`}>
+              <span className={state.live ? 'spinner' : 'dot'} aria-hidden="true" />
               {state.label}
             </span>
           ) : null}
@@ -464,8 +489,8 @@ function Compose({ people, onClose, onAdd }: { people: Person[]; onClose: () => 
       >
         <div className="compose-head">
           <div>
-            <h2 id="compose-title">Write an email to your inbox</h2>
-            <p className="fine">It arrives as if they sent it. Open it and Seyrin will decide whether to run it, ask you, or refuse.</p>
+            <h2 id="compose-title">New email</h2>
+            <p className="fine">Lands in your inbox as if they sent it.</p>
           </div>
           <button type="button" className="icon-btn" onClick={onClose} aria-label="Close">
             <CrossIcon />
@@ -473,7 +498,7 @@ function Compose({ people, onClose, onAdd }: { people: Person[]; onClose: () => 
         </div>
 
         <div className="starters" role="group" aria-label="Start from an example">
-          <span className="fine">Start from</span>
+          <span className="eyebrow">Try</span>
           {STARTERS.map((s) => (
             <button
               key={s.label}
@@ -523,17 +548,16 @@ function Compose({ people, onClose, onAdd }: { people: Person[]; onClose: () => 
             onChange={(e) => setBody(e.target.value)}
             rows={7}
             required
-            placeholder={`Ask for a document, report something broken on ${PERCH_URL}, or ask for a change to the site.`}
+            placeholder="Ask for a doc, report a bug on Perch, or request a site change."
           />
         </label>
         <div className="compose-actions">
-          <button type="submit" className="btn btn-primary">
-            Add to inbox
-          </button>
           <button type="button" className="btn btn-ghost" onClick={onClose}>
             Cancel
           </button>
-          <span className="fine">Only in this browser. Reset demo clears it.</span>
+          <button type="submit" className="btn btn-primary">
+            Add to inbox
+          </button>
         </div>
       </form>
     </dialog>

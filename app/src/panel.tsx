@@ -1,6 +1,7 @@
 // The Seyrin panel: what was asked, the safeguards that decided what happens, the plan, live
 // progress from the agent and Kane, the verified result, and the reply. One panel per email.
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { AsciiField } from './ascii.tsx';
 import { api, ApiError, isTask, shotUrl, type Health, type KaneRun, type LogEntry, type OutgoingEmail, type Policy, type Task, type WorkAttempt } from './api.ts';
 import {
   BUSY,
@@ -29,6 +30,7 @@ import {
   HandIcon,
   ImageIcon,
   KaneIcon,
+  KindIcon,
   LeafIcon,
   PencilIcon,
   PersonIcon,
@@ -193,7 +195,7 @@ export function SeyrinPanel({ email, health, onTask, onUseReply }: Props) {
     const win = window.open('', '_blank');
     try {
       win?.document.write(
-        '<title>Kane evidence</title><body style="font:15px -apple-system,system-ui,sans-serif;color:#555;padding:32px">Starting Kane’s evidence viewer…</body>',
+        '<title>Kane evidence</title><body style="margin:0;background:#0b0b0d;color:#8a8a93;font:14px ui-monospace,monospace;padding:32px">Starting Kane’s evidence viewer…</body>',
       );
     } catch {}
     try {
@@ -211,12 +213,12 @@ export function SeyrinPanel({ email, health, onTask, onUseReply }: Props) {
     return (
       <PanelFrame>
         <div className="sp-empty">
+          <AsciiField mode="drift" className="sp-empty-field" />
           <span className="sp-empty-icon">
-            <LeafIcon size={22} />
+            <LeafIcon size={20} />
           </span>
-          <h2>Nothing for Seyrin here</h2>
-          <p>{load.reason && !/^no task/i.test(load.reason) ? load.reason : 'This email doesn’t ask for a document, a bug fix or a change to your site.'}</p>
-          <p className="fine">Seyrin only picks up requests it can finish and prove. Everything else stays with you.</p>
+          <h2>Nothing to do here</h2>
+          <p>{load.reason && !/^no task/i.test(load.reason) ? load.reason : 'No doc, bug or site change asked for. This one stays with you.'}</p>
         </div>
       </PanelFrame>
     );
@@ -225,6 +227,7 @@ export function SeyrinPanel({ email, health, onTask, onUseReply }: Props) {
     return (
       <PanelFrame>
         <div className="sp-empty is-offline">
+          <AsciiField mode="drift" className="sp-empty-field" />
           <span className="sp-empty-icon">
             <AlertIcon size={20} />
           </span>
@@ -245,7 +248,6 @@ export function SeyrinPanel({ email, health, onTask, onUseReply }: Props) {
   return (
     <PanelFrame task={task} busy={busy} elapsed={busy && busySince ? now - busySince : null}>
       <section className="sp-ask" aria-label="What was asked">
-        <p className="eyebrow">What was asked</p>
         <h2 className="ask">{task.ask}</h2>
         <p className="ask-from">
           from <strong>{requesterLine(task).split(' · ')[0]}</strong>
@@ -255,8 +257,6 @@ export function SeyrinPanel({ email, health, onTask, onUseReply }: Props) {
 
       <Safeguards policy={task.policy} trust={task.requester.trust} />
 
-      <PlanSection task={task} liveRun={liveRun} />
-
       {actionError ? (
         <p className="sp-error" role="alert">
           <AlertIcon /> {actionError}
@@ -265,6 +265,7 @@ export function SeyrinPanel({ email, health, onTask, onUseReply }: Props) {
 
       <div ref={cardRef} className="card-anchor">
       <StateCard
+        key={task.phase}
         task={task}
         now={now}
         busySince={busySince}
@@ -281,6 +282,8 @@ export function SeyrinPanel({ email, health, onTask, onUseReply }: Props) {
       />
       </div>
 
+      <PlanSection task={task} liveRun={liveRun} />
+
       {latestEnded ? <Evidence task={task} run={latestEnded} busy={busy} onOpen={openEvidence} /> : null}
 
       {task.work?.attempts?.length ? <Attempts attempts={task.work.attempts} agent={task.work.agent} kind={task.kind} /> : null}
@@ -295,7 +298,7 @@ export function SeyrinPanel({ email, health, onTask, onUseReply }: Props) {
             <button type="button" className="btn btn-quiet" onClick={() => onUseReply(task.draftReply)}>
               <ReplyIcon /> Use this reply
             </button>
-            <span className="fine">Seyrin drafts. You read it and send it.</span>
+            <span className="fine">You review and send.</span>
           </div>
         </section>
       ) : null}
@@ -325,9 +328,13 @@ function PanelFrame({ task, busy, elapsed, children }: { task?: Task; busy?: boo
   return (
     <div className="sp">
       <header className="sp-head">
-        <SeyrinMark size={22} />
+        <SeyrinMark size={20} />
         <span className="sp-title">Seyrin</span>
-        {task ? <span className="tag tone-neutral">{KIND_LABEL[task.kind] || task.kind}</span> : null}
+        {task ? (
+          <span className={`kind kind-${task.kind}`}>
+            <KindIcon kind={task.kind} size={12} /> {KIND_LABEL[task.kind] || task.kind}
+          </span>
+        ) : null}
         {task ? <StatusPill task={task} busy={Boolean(busy)} elapsed={elapsed ?? null} /> : null}
       </header>
       <div className="sp-body">{children}</div>
@@ -347,8 +354,8 @@ function StatusPill({ task, busy, elapsed }: { task: Task; busy: boolean; elapse
           : 'neutral';
   return (
     <span className={`status-pill tone-${tone}`} role="status">
-      {busy ? <span className="pulse" aria-hidden="true" /> : <span className="dot" aria-hidden="true" />}
-      <span>{shortPhase(task)}</span>
+      {busy ? <span className="spinner" aria-hidden="true" /> : <span className="dot" aria-hidden="true" />}
+      <span key={shortPhase(task)} className="status-word">{shortPhase(task)}</span>
       {busy && elapsed !== null ? <span className="status-time">{fmtElapsed(elapsed)}</span> : null}
     </span>
   );
@@ -381,7 +388,7 @@ function Opening() {
   return (
     <div className="sp-opening" aria-live="polite">
       <p className="eyebrow">
-        <span className="pulse" aria-hidden="true" /> Seyrin is reading this email
+        <span className="spinner" aria-hidden="true" /> Reading
       </p>
       <div className="shimmer w80" />
       <div className="shimmer w60" />
@@ -401,41 +408,46 @@ function Opening() {
 function Safeguards({ policy, trust, title = 'Safeguards', compact = false }: { policy: Policy; trust?: Task['requester']['trust']; title?: string; compact?: boolean }) {
   const decision = DECISION[policy.decision];
   const risk = RISK[policy.risk];
-  return (
-    <section className={`sp-section${compact ? ' is-compact' : ''}`} aria-label={title}>
-      {compact ? null : (
-        <h3 className="sp-h">
-          <ShieldIcon /> {title}
-        </h3>
-      )}
-      <div className="sg-grid">
-        {trust ? (
-          <div className={`sg-tile tone-${TRUST[trust].tone}`} title={TRUST[trust].hint}>
-            <span className="sg-k">Trust</span>
-            <span className="sg-v">
-              <PersonIcon /> <span>{TRUST[trust].label}</span>
-            </span>
-          </div>
-        ) : null}
-        <div className={`sg-tile tone-${risk.tone}`} title={risk.hint}>
-          <span className="sg-k">Risk</span>
+  const tiles = (
+    <div className="sg-grid">
+      {trust ? (
+        <div className={`sg-tile tone-${TRUST[trust].tone}`} data-tip={TRUST[trust].hint}>
+          <span className="sg-k">Trust</span>
           <span className="sg-v">
-            <RiskIcon risk={policy.risk} /> <span>{risk.label}</span>
+            <PersonIcon /> <span>{TRUST[trust].label}</span>
           </span>
         </div>
-        <div className={`sg-tile tone-${decision.tone}`} title={decision.hint}>
-          <span className="sg-k">Decision</span>
-          <span className="sg-v">
-            <DecisionIcon decision={policy.decision} /> <span>{decision.label}</span>
-          </span>
-        </div>
+      ) : null}
+      <div className={`sg-tile tone-${risk.tone}`} data-tip={risk.hint}>
+        <span className="sg-k">Risk</span>
+        <span className="sg-v">
+          <RiskIcon risk={policy.risk} /> <span>{risk.label}</span>
+        </span>
       </div>
+      <div className={`sg-tile tone-${decision.tone}`} data-tip={decision.hint}>
+        <span className="sg-k">Decision</span>
+        <span className="sg-v">
+          <DecisionIcon decision={policy.decision} /> <span>{decision.label}</span>
+        </span>
+      </div>
+    </div>
+  );
+  if (compact) return <div className="sg is-compact" aria-label={title}>{tiles}</div>;
+  return (
+    <section className="sp-section sg" aria-label={title}>
+      {tiles}
       {policy.reasons.length ? (
-        <ul className="sg-reasons">
-          {policy.reasons.map((reason, i) => (
-            <li key={i}>{reason}</li>
-          ))}
-        </ul>
+        // The why is one click away; a refusal shows it straight away.
+        <details className="sg-why" open={policy.decision === 'refuse'}>
+          <summary>
+            <ShieldIcon /> Why <ChevronIcon className="chev" />
+          </summary>
+          <ul className="sg-reasons">
+            {policy.reasons.map((reason, i) => (
+              <li key={i}>{reason}</li>
+            ))}
+          </ul>
+        </details>
       ) : null}
     </section>
   );
@@ -490,16 +502,19 @@ function PlanSection({ task, liveRun }: { task: Task; liveRun: KaneRun | null })
   if (task.phase === 'refused') return null;
   if (!steps.length && !task.plan?.verify) return null;
   const doneCount = progress.filter((p) => p === 'done').length;
-  const note = !steps.length ? '' : doneCount === steps.length ? `${steps.length} steps · all done` : doneCount ? `${doneCount} of ${steps.length} done` : `${steps.length} steps`;
+  const note = !steps.length ? '' : `${doneCount}/${steps.length}`;
+  // How far the rail between the step icons is filled: up to the last finished step, half into the current one.
+  const reached = progress.lastIndexOf('done') + (progress.some((p) => p === 'active' || p === 'waiting') ? 0.5 : 0);
+  const fill = steps.length > 1 ? Math.min(1, Math.max(0, reached / (steps.length - 1))) : 0;
   return (
     <section className="sp-section" aria-label="The plan">
       {/* Open while the plan matters; folded away once the result is in, so the result stays in view. */}
       <details className="plan-wrap" open={!SETTLED.has(task.phase)}>
         <summary className="sp-h">
-          <SparkIcon /> The plan <span className="sp-h-note">{note}</span>
+          <SparkIcon /> Plan <span className="sp-h-note">{note}</span>
           <ChevronIcon className="chev" />
         </summary>
-        <ol className="plan">
+        <ol className="plan" style={{ ['--fill' as string]: fill }}>
           {steps.map((step, i) => {
             const state = progress[i] || 'pending';
             return (
@@ -512,7 +527,7 @@ function PlanSection({ task, liveRun }: { task: Task; liveRun: KaneRun | null })
                   {step.risk === 'modify' || step.risk === 'external' ? <span className={`tag tone-${RISK[step.risk].tone}`}>{RISK[step.risk].label}</span> : null}
                 </span>
                 <span className="plan-state" aria-label={state}>
-                  {state === 'done' ? <CheckIcon /> : state === 'active' ? <span className="pulse" /> : state === 'waiting' ? <HandIcon /> : null}
+                  {state === 'done' ? <CheckIcon className="draw" /> : state === 'active' ? <span className="spinner" /> : state === 'waiting' ? <HandIcon /> : null}
                 </span>
               </li>
             );
@@ -521,7 +536,7 @@ function PlanSection({ task, liveRun }: { task: Task; liveRun: KaneRun | null })
         {task.plan?.verify ? (
           <div className="verify">
             <div className="verify-h">
-              <KaneIcon /> How Kane will check it
+              <KaneIcon /> Kane checks
             </div>
             <p>{task.plan.verify}</p>
           </div>
@@ -529,7 +544,7 @@ function PlanSection({ task, liveRun }: { task: Task; liveRun: KaneRun | null })
         {task.spec && !BUSY.has(task.phase) && task.phase !== 'needs_info' ? (
           <details className="disclosure">
             <summary>
-              <ChevronIcon className="chev" /> What Seyrin understood
+              <ChevronIcon className="chev" /> Understood as
             </summary>
             <SpecView spec={task.spec} />
           </details>
@@ -570,8 +585,9 @@ function StateCard(props: CardProps) {
     const agentLines = task.log.filter((e) => e.source === 'agent').slice(-4);
     return (
       <section className="card card-live" aria-label="Progress">
+        <AsciiField mode="scan" className="card-field" />
         <div className="live-head">
-          <span className="pulse" aria-hidden="true" />
+          <span className="spinner" aria-hidden="true" />
           <strong aria-live="polite">{phaseLabel(task)}</strong>
           {busySince ? <span className="elapsed">{fmtElapsed(now - busySince)}</span> : null}
         </div>
@@ -594,7 +610,7 @@ function StateCard(props: CardProps) {
           </div>
         ) : null}
         {liveRun ? <KaneSteps run={liveRun} live now={now} /> : null}
-        {task.phase === 'verifying' && !liveRun ? <p className="fine">Kane is queued; it runs one browser at a time.</p> : null}
+        {task.phase === 'verifying' && !liveRun ? <p className="fine">Queued: Kane runs one browser at a time.</p> : null}
       </section>
     );
   }
@@ -604,7 +620,7 @@ function StateCard(props: CardProps) {
       return (
         <section className="card card-approve" aria-label="Approval">
           <div className="card-h">
-            <HandIcon /> Seyrin needs your OK
+            <HandIcon /> Needs your OK
           </div>
           <p>{task.detail || 'Nothing runs until you approve it.'}</p>
           <div className="row">
@@ -619,8 +635,8 @@ function StateCard(props: CardProps) {
           </div>
           <p className="fine">
             {approveBlocked(props)
-              ? `This change needs ${agentName(props.fixAgent)} to edit ${task.app?.name || 'the site'}'s code, and it isn't ready on this machine, so approving is off.`
-              : `Kane checks the result before anything reaches ${task.requester.name?.split(' ')[0] || 'them'}. Every change can be undone.`}
+              ? `${agentName(props.fixAgent)} isn't ready on this machine, so approving is off.`
+              : `Kane verifies it before ${task.requester.name?.split(' ')[0] || 'they'} hears back. Undo anytime.`}
           </p>
         </section>
       );
@@ -629,12 +645,10 @@ function StateCard(props: CardProps) {
       return (
         <section className="card card-refused" aria-label="Refused">
           <div className="card-h">
-            <ShieldOffIcon /> Seyrin won&rsquo;t act on this
+            <ShieldOffIcon /> Refused
           </div>
           <p>{task.detail || task.policy.reasons.at(-1)}</p>
-          <p className="fine">
-            Nothing ran and nothing was sent. If it looks real, check with {task.requester.name || 'the sender'} on a channel you already trust.
-          </p>
+          <p className="fine">Nothing ran, nothing was sent. Check with {task.requester.name || 'the sender'} on a channel you trust.</p>
         </section>
       );
 
@@ -642,7 +656,7 @@ function StateCard(props: CardProps) {
       return (
         <section className="card card-info" aria-label="Needs more detail">
           <div className="card-h">
-            <PencilIcon /> Seyrin needs a bit more
+            <PencilIcon /> Needs a bit more
           </div>
           <p>{task.detail}</p>
           {task.spec ? <SpecEditor spec={task.spec} pending={pending === 'edit'} onSave={props.onEditSpec} /> : null}
@@ -663,7 +677,7 @@ function StateCard(props: CardProps) {
           {verdict?.root_cause && verdict.root_cause !== (latest && runSummary(latest)) ? <p className="fine">Root cause: {verdict.root_cause}</p> : null}
           {fix ? (
             <div className="fix-policy">
-              <p className="fix-policy-h">If you fix it</p>
+              <p className="eyebrow">If you fix it</p>
               <Safeguards policy={fix} compact />
             </div>
           ) : null}
@@ -678,12 +692,12 @@ function StateCard(props: CardProps) {
               </div>
               <p className="fine">
                 {props.fixReady
-                  ? `The agent edits ${task.app?.name || 'the app'}'s code, then Kane checks it again, up to 3 rounds. You can undo it.`
-                  : `${agent[0]!.toUpperCase()}${agent.slice(1)} isn't ready on this machine, so fixing is off. Reply with Kane's evidence instead.`}
+                  ? `Edits ${task.app?.name || 'the app'}'s code, then Kane re-checks. Up to 3 rounds, undoable.`
+                  : `${agent[0]!.toUpperCase()}${agent.slice(1)} isn't ready here, so fixing is off.`}
               </p>
             </>
           ) : (
-            <p className="fine">{task.app ? `${task.app.name} has no fix agent set up.` : 'This page is not one of your apps.'} Reply with Kane&rsquo;s evidence.</p>
+            <p className="fine">{task.app ? `${task.app.name} has no fix agent set up.` : 'Not one of your apps.'}</p>
           )}
         </section>
       );
@@ -696,7 +710,7 @@ function StateCard(props: CardProps) {
             <KaneIcon /> Kane couldn&rsquo;t reproduce it
           </div>
           <p>{(latest && runSummary(latest)) || task.detail}</p>
-          <p className="fine">The page behaved as expected in a clean browser. The draft reply asks for a little more detail.</p>
+          <p className="fine">Worked as expected in a clean browser. The draft asks for more detail.</p>
           <div className="row">
             <button type="button" className="btn btn-ghost" onClick={props.onRetry} disabled={Boolean(pending)}>
               <RetryIcon /> {pending === 'retry' ? 'Starting…' : 'Try again'}
@@ -710,8 +724,9 @@ function StateCard(props: CardProps) {
       const verified = task.result?.verified !== false;
       return (
         <section className={`card ${verified ? 'card-done' : 'card-neutral'}`} aria-label="Result">
+          {verified ? <AsciiField mode="ripple" once className="card-field" /> : null}
           <div className="card-h">
-            <SealIcon /> {verified ? 'Done & verified by Kane' : 'Done'}
+            <SealIcon className="draw" /> {verified ? 'Verified by Kane' : 'Done'}
           </div>
           <p>{task.detail}</p>
           {task.result?.proof ? (
@@ -747,15 +762,13 @@ function StateCard(props: CardProps) {
             <button type="button" className="btn btn-primary" onClick={props.onRetry} disabled={Boolean(pending)}>
               <RetryIcon /> {pending === 'retry' ? 'Starting…' : 'Retry'}
             </button>
-          </div>
-          <p className="fine">Nothing was sent. {task.undo?.available ? 'You can also undo what the agent changed.' : ''}</p>
-          {task.undo?.available ? (
-            <div className="row">
+            {task.undo?.available ? (
               <button type="button" className="btn btn-ghost" onClick={props.onUndo} disabled={Boolean(pending)}>
                 <UndoIcon /> {task.undo.label || 'Undo'}
               </button>
-            </div>
-          ) : null}
+            ) : null}
+          </div>
+          <p className="fine">Nothing was sent.</p>
         </section>
       );
 
@@ -806,7 +819,7 @@ function ActionBar(props: {
     const stepText = step ? cleanRemark(step.remark) || `step ${liveRun!.steps.length}` : '';
     body = (
       <>
-        <span className="pulse" aria-hidden="true" />
+        <span className="spinner" aria-hidden="true" />
         <span className="ab-text">
           <strong>{phaseLabel(task)}</strong>
           {stepText ? <span className="ab-sub"> · {stepText}</span> : null}
@@ -850,7 +863,7 @@ function ActionBar(props: {
       <>
         <SealIcon className="ab-icon tone-good" />
         <span className="ab-text">
-          <strong>{task.result?.verified === false ? 'Done' : 'Done & verified by Kane'}</strong>
+          <strong>{task.result?.verified === false ? 'Done' : 'Verified by Kane'}</strong>
         </span>
         {jump('Result')}
         {task.result?.link ? (
@@ -886,7 +899,7 @@ function ActionBar(props: {
   }
   if (!body) return null;
   return (
-    <div className="action-bar" role="region" aria-label="Current step">
+    <div className="action-bar" role="region" aria-label="Current step" key={task.phase}>
       {body}
     </div>
   );
@@ -912,11 +925,11 @@ function KaneSteps({ run, live = false, now = Date.now() }: { run: KaneRun; live
           const text = cleanRemark(step.remark);
           return (
             <li key={step.step} className={`kstep is-${step.status}`}>
-              <span className="kstep-mark" aria-label={step.status}>
+              <span key={step.status} className="kstep-mark" aria-label={step.status}>
                 {step.status === 'done' ? '✓' : step.status === 'failed' ? '✕' : '•'}
               </span>
               <span className="kstep-n">{i + 1}</span>
-              <span className="kstep-text">{text || (step.status === 'running' ? 'Working out the next move…' : `Step ${i + 1}`)}</span>
+              <span className="kstep-text">{text || (step.status === 'running' ? 'Thinking…' : `Step ${i + 1}`)}</span>
             </li>
           );
         })}
@@ -924,7 +937,7 @@ function KaneSteps({ run, live = false, now = Date.now() }: { run: KaneRun; live
           <li className="kstep is-running">
             <span className="kstep-mark">•</span>
             <span className="kstep-n" />
-            <span className="kstep-text">Opening a real browser…</span>
+            <span className="kstep-text">Opening a browser…</span>
           </li>
         ) : null}
       </ol>
@@ -948,7 +961,7 @@ function Evidence({ task, run, busy, onOpen }: { task: Task; run: KaneRun; busy:
           <button type="button" className="shot" onClick={() => onOpen(run)} title="Open Kane's evidence viewer">
             <img src={shotUrl(run.screenshot)} alt={`Kane's last screenshot from the ${run.label || 'run'}`} loading="lazy" />
             <span className="shot-cta">
-              Evidence <ArrowOutIcon />
+              Open <ArrowOutIcon />
             </span>
           </button>
         ) : (
@@ -970,7 +983,7 @@ function Evidence({ task, run, busy, onOpen }: { task: Task; run: KaneRun; busy:
               </a>
             ) : null}
           </div>
-          <p className="fine">
+          <p className="ev-stats">
             {[run.label, `run ${run.attempt}`, end?.duration ? `${Math.round(end.duration)}s` : null, run.steps?.length ? `${run.steps.length} steps` : null]
               .filter(Boolean)
               .join(' · ')}
@@ -1081,7 +1094,7 @@ function Audit({ log, extractor }: { log: LogEntry[]; extractor: string | null }
   return (
     <details className="audit">
       <summary>
-        <ChevronIcon className="chev" /> Audit log <span className="sp-h-note">{log.length} entries{extractor ? ` · understood with ${extractor === 'openai' ? 'OpenAI' : extractor}` : ''}</span>
+        <ChevronIcon className="chev" /> Audit log <span className="sp-h-note">{log.length}{extractor ? ` · ${extractor === 'openai' ? 'OpenAI' : extractor}` : ''}</span>
       </summary>
       <ol>
         {log.map((entry, i) => (

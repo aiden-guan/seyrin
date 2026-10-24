@@ -84,11 +84,9 @@ export function KaneConsole({ open, onToggle, subjectFor }: { open: boolean; onT
         <TerminalIcon />
         <span className="console-title">Kane console</span>
         <span className={`console-live${live ? ' is-live' : ''}`}>{live ? 'live' : 'offline'}</span>
-        <span className="console-peek">
-          {open ? 'Kane CLI NDJSON, agent logs and gate runs as they happen' : last ? `${last.at}  ${last.source}  ${last.text}` : 'Waiting for Kane…'}
-        </span>
+        <span className="console-peek">{open ? (lines.length ? `${lines.length} lines` : '') : last ? `${last.at}  ${last.source}  ${last.text}` : 'Waiting for Kane…'}</span>
         <span className="console-toggle">
-          {open ? 'Hide' : 'Show'} <ChevronIcon className={open ? 'rot-90' : 'rot--90'} />
+          <ChevronIcon className={open ? 'rot-90' : 'rot--90'} />
         </span>
       </button>
       {open ? (
@@ -104,7 +102,7 @@ export function KaneConsole({ open, onToggle, subjectFor }: { open: boolean; onT
             stick.current = el.scrollHeight - el.scrollTop - el.clientHeight < 24;
           }}
         >
-          {lines.length ? null : <p className="console-empty">Waiting for Kane… open a request and Seyrin will put Kane to work.</p>}
+          {lines.length ? null : <p className="console-empty">Waiting for Kane…</p>}
           {lines.map((line) => (
             <div key={line.id} className={`cline cs-${line.source}${line.tone ? ` is-${line.tone}` : ''}`}>
               <span className="cline-at">{line.at}</span>
@@ -115,6 +113,7 @@ export function KaneConsole({ open, onToggle, subjectFor }: { open: boolean; onT
               </span>
             </div>
           ))}
+          {live ? <span className="cursor" aria-hidden="true" /> : null}
         </div>
       ) : null}
     </section>
