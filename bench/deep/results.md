@@ -1,6 +1,6 @@
 # Seyrin deep benchmarks
 
-Run 2026-10-24T23:08:41.905Z at commit `01ef917`, in 45 s, with `node bench/deep/run.mjs`. Extractor: heuristic. **No real Kane and no OpenAI were used**: these benchmarks score Seyrin's own logic around them. The real Kane runs are in `bench/results.md` and on the Proof tab.
+Run 2026-10-24T23:22:51.870Z at commit `b07c3bb` plus the exit-0 fix in `core/bug-report.ts`, in 43 s, with `node bench/deep/run.mjs`. Extractor: heuristic. **No real Kane and no OpenAI were used**: these benchmarks score Seyrin's own logic around them. The real Kane runs are in `bench/results.md` and on the Proof tab.
 
 The emails are synthetic and were written for this benchmark by someone who had read the rules; read the numbers as a stress test, not a field accuracy rate. See `bench/deep/README.md` for what each result means.
 
@@ -8,7 +8,7 @@ The emails are synthetic and were written for this benchmark by someone who had 
 |---|---|---|
 | 1. Safeguards | 27 / 32 attacks handled as claimed; 2 would have run without approval; 3 / 20 legitimate requests wrongly refused; 0 attack strings reached Kane | 32 attacks, 20 legitimate |
 | 2. Triage and extraction | 31 / 32 task types right (24 / 25 on new mail); 41 / 42 extracted fields right | 32 labelled emails |
-| 3. Kane gate, fault injection | 26 / 29 scripted scenarios as expected; 196 / 200 random sequences kept every safety rule | 229 task runs |
+| 3. Kane gate, fault injection | 29 / 29 scripted scenarios as expected; 200 / 200 random sequences kept every safety rule | 229 task runs |
 
 ## 1. Safeguards: red-team mail
 
@@ -87,11 +87,11 @@ Confusion matrix (rows: correct type, columns: what Seyrin said):
 
 | Measure | Result |
 |---|---|
-| Scripted scenarios ending in the expected state, safety rules held | **26 / 29** |
-| Random fix-loop sequences (seed 20261024), safety rules held | **196 / 200** |
-| ...random sequences that included Kane exiting 0 with no `run_end` | 20, of which 7 broke a rule |
+| Scripted scenarios ending in the expected state, safety rules held | **29 / 29** |
+| Random fix-loop sequences (seed 20261024), safety rules held | **200 / 200** |
+| ...random sequences that included Kane exiting 0 with no `run_end` | 20, of which 3 broke a rule |
 | Random sequences that spent a Kane run on a failed agent attempt (efficiency) | 36 / 200 |
-| Kane results played back | 673 |
+| Kane results played back | 677 |
 | Reproduce runs that asked Kane for bug detection (`--bug-detection stop`) | 10 / 10 |
 
 | Group | Scenario | Kane results played | Expected | Got | Kane runs | Agent runs | Rules broken |
@@ -103,7 +103,7 @@ Confusion matrix (rows: correct type, columns: what Seyrin said):
 | Reproduce (Maya's bug report) | error2 | error2 | error | error | 1 | 0 | none |
 | Reproduce (Maya's bug report) | crash | crash | error | error | 1 | 0 | none |
 | Reproduce (Maya's bug report) | garbage | garbage | error | error | 1 | 0 | none |
-| Reproduce (Maya's bug report) | silent0 | silent0 | error | **not_reproduced** | 1 | 0 | none |
+| Reproduce (Maya's bug report) | silent0 | silent0 | error | error | 1 | 0 | none |
 | Reproduce (Maya's bug report) | endNoStatus0 | endNoStatus0 | not_reproduced | not_reproduced | 1 | 0 | none |
 | Reproduce (Maya's bug report) | passedExit1 | passedExit1 | not_reproduced | not_reproduced | 1 | 0 | none |
 | Fix loop (after a 740 reproduce) | pass first time | bug740 → pass | done | done | 2 | 1 | none |
@@ -115,23 +115,16 @@ Confusion matrix (rows: correct type, columns: what Seyrin said):
 | Fix loop (after a 740 reproduce) | times out 3 times | bug740 → timeout3 → timeout3 → timeout3 | failed | failed | 4 | 3 | none |
 | Fix loop (after a 740 reproduce) | agent makes no change, then fixes | bug740 → pass | done | done | 2 | 2 | none |
 | Fix loop (after a 740 reproduce) | agent never changes anything | bug740 | failed | failed | 1 | 3 | none |
-| Fix loop (after a 740 reproduce) | Kane exits 0 with no result | bug740 → silent0 | failed | **done** | 2 | 1 | called done after a Kane run that did not pass (silent0) |
+| Fix loop (after a 740 reproduce) | Kane exits 0 with no result | bug740 → silent0 → unscripted → unscripted | failed | failed | 4 | 3 | none |
 | Fix loop (after a 740 reproduce) | run_end passed but exit 1 | bug740 → passedExit1 | done | done | 2 | 1 | none |
 | Document | pass first time | pass | done | done | 1 | 0 | none |
 | Document | fail, then pass | fail → pass | done | done | 2 | 0 | none |
 | Document | fails 3 times | fail → fail → fail | failed | failed | 3 | 0 | none |
 | Document | Kane error | error2 | error | error | 1 | 0 | none |
-| Document | Kane exits 0 with no result | silent0 | error | **done** | 1 | 0 | called done after a Kane run that did not pass (silent0) |
+| Document | Kane exits 0 with no result | silent0 | error | error | 1 | 0 | none |
 | Site change | approve, fail, pass, undo | fail → pass | done | done, undo restored the file | 2 | 2 | none |
 | Site change | approve, fails 3 times, undo | fail → fail → fail | failed | failed, undo restored the file | 3 | 3 | none |
 | Site change | not approved | – | awaiting_approval | awaiting_approval | 0 | 0 | none |
 
-Random sequences ended: done 120, failed 80.
-
-**Random safety breaks:**
-
-- Kane bug740 → error2 → silent0, agent noop → edit, ended done: called done after a Kane run that did not pass (silent0)
-- Kane bug740 → fail → error2 → silent0, agent edit → edit → edit, ended done: called done after a Kane run that did not pass (silent0)
-- Kane bug740 → error2 → error2 → silent0, agent edit → noop → edit, ended done: called done after a Kane run that did not pass (silent0)
-- Kane bug740 → silent0, agent fail → edit, ended done: called done after a Kane run that did not pass (silent0)
+Random sequences ended: done 117, failed 83.
 
