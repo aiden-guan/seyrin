@@ -5,12 +5,13 @@ import { createReadStream, existsSync, readFileSync, statSync, watch, openSync, 
 import { resolve, extname } from 'node:path';
 import { spawn, execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
-import { ROOT, DATA_DIR, loadConfig, loadEnv, kaneCommand } from './config.mjs';
+import { ROOT, DATA_DIR, loadConfig, loadEnv, kaneCommand, resolveOpenAIModels } from './config.mjs';
 import { createTasks } from './tasks.mjs';
 import { agentLabel, agentReady } from './agents.mjs';
 import { docPage, docsIndexPage, getDoc, listDocs } from './docs.mjs';
 
 loadEnv();
+await resolveOpenAIModels();
 const config = loadConfig();
 mkdirSync(DATA_DIR, { recursive: true });
 const core = await import(pathToFileURL(resolve(ROOT, 'core/index.ts')).href);
@@ -254,6 +255,6 @@ server.listen(config.server.port, '127.0.0.1', () => {
   const h = health();
   console.log(`Seyrin on http://127.0.0.1:${config.server.port}`);
   console.log(`  Kane CLI: ${h.kane.installed ? `${h.kane.version}${h.kane.fake ? ' (offline stand-in)' : ''}, ${h.kane.signedIn ? 'signed in' : 'NOT signed in (run kane-cli login)'}` : 'not found'}`);
-  console.log(`  OpenAI: ${h.openai ? 'on' : 'off (add OPENAI_API_KEY to .env)'}; browser: ${h.headed ? 'visible' : 'headless'}`);
+  console.log(`  OpenAI: ${h.openai ? `on (${process.env.OPENAI_MODEL}; agent ${process.env.OPENAI_FIX_MODEL})` : 'off (add OPENAI_API_KEY to .env)'}; browser: ${h.headed ? 'visible' : 'headless'}`);
   console.log(`  Apps: ${h.apps.map((a) => `${a.name} ${a.origins.join(' ')} (agent: ${a.fixAgent || 'none'}${a.fixAgent && !a.fixReady ? ', not ready' : ''})`).join('; ')}`);
 });

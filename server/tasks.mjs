@@ -137,7 +137,7 @@ export function createTasks({ config, core, baseUrl }) {
       task.appId = app?.id || null;
       task.plan = {
         steps: [
-          { label: `Follow ${firstName(task.requester)}'s steps on ${spec.url ? shortUrl(spec.url) : 'your app'}`, tool: 'kane', risk: 'read' },
+          { label: `Follow ${firstName(task.requester)}'s steps on ${spec.url || 'your app'}`, tool: 'kane', risk: 'read' },
           { label: 'If it is a real bug: fix the code, then re-run the same steps (asks you first)', tool: 'code', risk: 'modify' },
           { label: 'Draft a reply that matches what Kane found', tool: 'reply', risk: 'read' },
         ],
@@ -301,6 +301,14 @@ export function createTasks({ config, core, baseUrl }) {
       const result = await runAgent({ agent: app.fixAgent, repo: app.repo, prompt, log: (t) => log(task, 'agent', t) });
       const attempt = { n, agentExitCode: result.code, summary: result.summary, diff: diffAgainst(app.repo, task.id), verdict: null, detail: '' };
       task.work.attempts.push(attempt);
+      if (result.code !== 0 && !attempt.diff) {
+        // Nothing changed, so a Kane run would only repeat the last result.
+        attempt.verdict = 'error';
+        attempt.detail = 'The agent did not change anything.';
+        log(task, 'seyrin', `Attempt ${n}: the agent made no change; not spending a Kane run on it.`);
+        feedback = { detail: feedback?.detail || task.detail, steps: feedback?.steps || [], summary: result.summary };
+        continue;
+      }
       phase(task, 'verifying', 'Kane is checking the change in a browser…');
       const check = await kaneCheck(task, { objective: task.plan.verify, url: task.spec.url, name, cwd: app.repo, label: n === 1 ? label : `${label} (${n})`, keepEvidence: `${name}-${n}` });
       attempt.verdict = check.verdict;
@@ -376,7 +384,7 @@ export function createTasks({ config, core, baseUrl }) {
         log: [],
       };
       tasks.set(task.id, task);
-      log(task, 'policy', `${upper(intent.kind.replace('_', ' '))} from ${task.requester.name || task.requester.email} (${trust.trust}). ${policy.reasons.join(' ')}`);
+      log(task, 'policy', `${upper(intent.kind.replace('_', ' '))} from ${task.requester.name || task.requester.email} (${trust.trust}). ${policy.reasons.map((r) => r.replace(/[.\s]*$/, '.')).join(' ')}`);
       start(task).catch((error) => phase(task, 'error', error.message));
       return { task: view(task) };
     },

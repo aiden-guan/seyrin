@@ -62,3 +62,17 @@ export function findOnPath(name) {
   }
   return null;
 }
+
+/** Pick OpenAI models this key can actually use, unless .env names them. */
+export async function resolveOpenAIModels() {
+  const key = process.env.OPENAI_API_KEY;
+  if (!key || (process.env.OPENAI_MODEL && process.env.OPENAI_FIX_MODEL)) return;
+  try {
+    const response = await fetch('https://api.openai.com/v1/models', { headers: { authorization: `Bearer ${key}` }, signal: AbortSignal.timeout(8000) });
+    const ids = (await response.json()).data?.map((m) => m.id) || [];
+    const pick = (prefs) => prefs.find((id) => ids.includes(id)) || ids.filter((id) => /^gpt-/.test(id)).sort().at(-1);
+    process.env.OPENAI_MODEL ||= pick(['gpt-5-mini', 'gpt-5', 'gpt-4.1-mini']);
+    process.env.OPENAI_FIX_MODEL ||= pick(['gpt-5', 'gpt-5-mini', 'gpt-4.1']);
+    process.env.OPENAI_DOC_MODEL ||= process.env.OPENAI_MODEL;
+  } catch {}
+}

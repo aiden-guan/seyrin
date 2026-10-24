@@ -39,7 +39,10 @@ export function classifyRequest(email: Pick<Email, 'subject' | 'bodyText'> & { f
 }
 
 function summariseAsk(email: Pick<Email, 'subject' | 'bodyText'>, kind: TaskKind): string {
-  if (kind === 'document') return `Write ${articled(extractDocumentHeuristic(email).title)}`;
+  if (kind === 'document') {
+    const title = extractDocumentHeuristic(email).title;
+    return /[:?!]/.test(title) ? `Write a document: ${title}` : `Write ${articled(title)}`;
+  }
   if (kind === 'site_change') {
     const spec = extractSiteChangeHeuristic(email, []);
     return spec.change ? upperFirst(spec.change) : 'Change the website';
@@ -168,7 +171,7 @@ export function draftTaskReply(input: {
   ask: string;
 }): string {
   const hello = input.senderName ? `Hi ${input.senderName.split(/\s+/)[0]},` : 'Hi,';
-  const proof = input.proof ? `\n\nI checked it end to end: ${lowerFirst(input.proof.replace(/\.$/, ''))}.` : '';
+  const proof = input.proof ? `\n\nI checked it end to end: ${(/^Kane\b/.test(input.proof) ? input.proof : lowerFirst(input.proof)).replace(/\.$/, '')}.` : '';
   if (input.outcome === 'done' && input.kind === 'document') {
     return `${hello}\n\nDone, here's the doc: ${input.link}${proof}\n\nLet me know what you'd change.\n`;
   }
