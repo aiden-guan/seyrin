@@ -7,9 +7,10 @@ const { FIXTURES } = await import(new URL('../app/src/fixtures.ts', import.meta.
 const post = (path, body) => fetch(`${server}${path}`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: body ? JSON.stringify(body) : undefined }).then((r) => r.json());
 const get = (path) => fetch(`${server}${path}`).then((r) => r.json());
 const settle = async (id, phases) => {
-  for (;;) {
+  // A task can take up to 3 Kane runs of 240 s each; past 15 minutes something is stuck.
+  for (const until = Date.now() + 15 * 60_000; ; ) {
     const task = await get(`/v1/tasks/${id}`);
-    if (phases.includes(task.phase)) return task;
+    if (phases.includes(task.phase) || Date.now() > until) return task;
     await new Promise((r) => setTimeout(r, 2000));
   }
 };

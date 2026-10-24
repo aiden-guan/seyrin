@@ -50,6 +50,8 @@ echo "OPENAI_API_KEY=sk-…" > .env          # OpenAI writes docs, extracts step
 npm start                                  # Perch on :4480, Seyrin on http://127.0.0.1:4477
 ```
 
+Every `npm start` also stages the demo: it resets Perch (planted bugs back, tasks and documents cleared) and has Kane run each demo email, leaving Approve and Fix it for you. With real Kane that takes a few minutes and uses Kane credits; the inbox fills in live. Skip it with `npm start -- --no-prepare` or `SEYRIN_PREPARE=0 npm start`.
+
 `npm run start:offline` uses `scripts/fake-kane-cli.mjs`, a stand-in that emits Kane's NDJSON, so you can work without credits. `npm run demo:reset` puts Perch's planted bugs back and clears tasks. `npm test` runs the core tests.
 
 ## Kane CLI in Seyrin
