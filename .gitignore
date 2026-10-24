@@ -1,0 +1,7 @@
+node_modules/
+.data/
+.env
+app/dist/
+**/.testmuai/kane-gate.json
+**/.testmuai/evidence/
+.DS_Store

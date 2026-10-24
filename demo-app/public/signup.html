@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Sign up · Perch</title><link rel="stylesheet" href="/perch.css"></head>
+<body>
+<main>
+  <h1>Create your studio</h1>
+  <p class="lede">Free for your first 30 bookings each month. No card needed.</p>
+  <section class="panel" data-signup>
+    <form data-signup-form novalidate>
+      <label for="name">Your name</label>
+      <input id="name" name="name" autocomplete="name" required>
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" autocomplete="email" required>
+      <label for="studio">Studio name</label>
+      <input id="studio" name="studio" required>
+      <p class="error" role="alert" data-signup-error></p>
+      <button class="button" type="submit">Create account</button>
+    </form>
+  </section>
+  <section class="panel success" data-signup-done hidden>
+    <h2>Welcome to Perch, <span data-signup-name></span>!</h2>
+    <p>We sent a confirmation link to <strong data-signup-email></strong>. Your booking page for <strong data-signup-studio></strong> is ready to set up.</p>
+  </section>
+</main>
+<script src="/_header.js"></script>
+<script src="/signup.js"></script>
+</body></html>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Pricing · Perch</title><link rel="stylesheet" href="/perch.css"></head>
+<body>
+<main>
+  <h1>Simple pricing</h1>
+  <p class="lede">Start free. Upgrade when your studio grows.</p>
+  <section class="plans" aria-label="Plans">
+    <article class="plan">
+      <h2>Free</h2><div class="price">$0 <small>/ month</small></div>
+      <ul><li>1 booking page</li><li>Up to 30 bookings a month</li><li>Email reminders</li></ul>
+      <a class="button ghost" href="/signup">Get started</a>
+    </article>
+    <article class="plan featured">
+      <h2>Pro</h2><div class="price">$12 <small>/ month</small></div>
+      <ul><li>Unlimited bookings</li><li>Text reminders</li><li>Deposits and payments</li></ul>
+      <button class="button" type="button" data-plan="pro">Upgrade to Pro</button>
+    </article>
+    <article class="plan">
+      <h2>Team</h2><div class="price">$29 <small>/ month</small></div>
+      <ul><li>Everything in Pro</li><li>5 instructors</li><li>Shared calendar</li></ul>
+      <button class="button ghost" type="button" data-plan="team">Choose Team</button>
+    </article>
+  </section>
+  <section id="checkout" class="panel" hidden aria-labelledby="checkout-title">
+    <h2 id="checkout-title">Checkout</h2>
+    <p>You're upgrading to <strong data-checkout-plan></strong> for <strong data-checkout-price></strong> a month.</p>
+    <form data-checkout-form>
+      <label for="checkout-email">Work email</label>
+      <input id="checkout-email" name="email" type="email" autocomplete="email" required>
+      <p class="error" role="alert" data-checkout-error></p>
+      <button class="button" type="submit">Continue to payment</button>
+    </form>
+    <p data-checkout-done hidden>Payment is simulated in this demo. You're all set on <strong data-checkout-plan></strong>.</p>
+  </section>
+</main>
+<script src="/_header.js"></script>
+<script src="/pricing.js"></script>
+</body></html>

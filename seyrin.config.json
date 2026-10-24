@@ -1,0 +1,24 @@
+{
+  "server": { "port": 4477, "headed": true, "runTimeoutSeconds": 240, "maxSteps": 30 },
+  "me": { "name": "Alex Kim", "email": "you@perch.studio", "company": "Perch" },
+  "teamDomains": ["perch.studio"],
+  "people": [
+    { "name": "Jordan Reyes", "email": "jordan@perch.studio", "trust": "team", "role": "cofounder" },
+    { "name": "Maya Chen", "email": "maya@lunayoga.studio", "trust": "known", "role": "customer" },
+    { "name": "Priya Nair", "email": "priya@acmeyoga.com", "trust": "known", "role": "pilot contact at Acme Yoga" }
+  ],
+  "apps": [
+    {
+      "id": "perch",
+      "name": "Perch",
+      "origins": ["http://localhost:4480"],
+      "repo": "./demo-app",
+      "fixAgent": "openai"
+    }
+  ],
+  "knowledge": [
+    "Perch is a booking product for small yoga, pottery and music studios: one booking page, reminders, and payments.",
+    "Plans: Free ($0, 1 booking page, up to 30 bookings a month), Pro ($12 per studio per month, unlimited bookings, text reminders, deposits), Team ($29 per month, 5 instructors, shared calendar).",
+    "Setting up a studio takes about ten minutes."
+  ]
+}

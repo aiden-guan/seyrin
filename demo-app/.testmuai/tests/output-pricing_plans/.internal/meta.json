@@ -1,0 +1,25 @@
+{
+  "commit_id": "97b166e0-91d0-4342-9f49-2781e49d6e51",
+  "test_id": "043fe7d8-4c6c-4834-a68e-dae64d98afee",
+  "testcase_id": "01M5QG69PW3MHCY78215MV4T83",
+  "project_id": "01M5QFTPCQBYMGMVT4PBF4Y96V",
+  "folder_id": "01M5QFTPQ1AHEHDJBAZ3HAFMW9",
+  "org_id": "3396151",
+  "session_name": "pricing_plans",
+  "executions": [
+    {
+      "execution_id": "bcccf318-165c-475b-9aa1-4dc211492db4",
+      "run_kind": "replay",
+      "status": "passed",
+      "valid": true,
+      "at": "2026-10-24T17:44:52.324Z"
+    },
+    {
+      "execution_id": "fc691fa1-db6b-42e3-958f-302164154dd0",
+      "run_kind": "replay",
+      "status": "passed",
+      "valid": true,
+      "at": "2026-10-24T17:46:19.028Z"
+    }
+  ]
+}
