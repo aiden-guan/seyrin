@@ -372,7 +372,7 @@ function shortPhase(task: Task): string {
     case 'needs_info':
       return 'Needs detail';
     case 'reproduced':
-      return 'Bug confirmed';
+      return kaneConfirmed(task.run) ? 'Bug confirmed' : 'Unconfirmed';
     case 'not_reproduced':
       return 'Not reproduced';
     case 'done':
@@ -569,6 +569,11 @@ function approveBlocked(props: { task: Task; fixReady: boolean }): boolean {
   return props.task.kind === 'site_change' && !props.fixReady;
 }
 
+/** Kane flags a confirmed product bug with result_code 740; any other failure may be Kane getting stuck. */
+function kaneConfirmed(run: KaneRun | null | undefined) {
+  return String(run?.runEnd?.result_code ?? '') === '740';
+}
+
 function StateCard(props: CardProps) {
   const { task, now, busySince, liveRun, pending } = props;
   const latest = task.run;
@@ -660,12 +665,14 @@ function StateCard(props: CardProps) {
       const fix = task.fixPolicy;
       const agent = agentName(props.fixAgent);
       const canFix = task.app?.canFix && fix?.decision !== 'refuse';
+      const confirmed = kaneConfirmed(latest);
       return (
-        <section className="card card-bug" aria-label="Bug reproduced">
+        <section className={`card ${confirmed ? 'card-bug' : 'card-approve'}`} aria-label="Bug reproduced">
           <div className="card-h">
-            <BugIcon /> {verdict?.severity ? `Kane confirmed a ${verdict.severity} bug` : 'Kane reproduced the bug'}
+            <BugIcon /> {confirmed ? (verdict?.severity ? `Kane confirmed a ${verdict.severity} bug` : 'Kane confirmed the bug') : "Kane couldn't confirm it"}
           </div>
           <p>{(latest && runSummary(latest)) || task.detail}</p>
+          {confirmed ? null : <p className="fine">The steps failed, but Kane didn't flag a product bug. Check the evidence before fixing.</p>}
           {verdict?.root_cause && verdict.root_cause !== (latest && runSummary(latest)) ? <p className="fine">Root cause: {verdict.root_cause}</p> : null}
           {fix ? (
             <div className="fix-policy">
