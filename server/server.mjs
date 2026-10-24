@@ -118,8 +118,10 @@ async function serveEvidence(pack) {
     let buffer = '';
     const onData = (chunk) => {
       buffer += chunk;
-      const match = /https?:\/\/(?:127\.0\.0\.1|localhost):\d+[^\s"']*/.exec(buffer);
-      if (match) done(match[0]);
+      // kane-cli prints "serving … on http://127.0.0.1:PORT", then a "pack" and a "viewer" line per
+      // pack. Only the viewer URL opens anything; the bare server root is a 404.
+      const match = /^\s*viewer\s+(https?:\/\/\S+)/m.exec(buffer);
+      if (match) done(match[1]);
     };
     child.stdout.on('data', onData);
     child.stderr.on('data', onData);
