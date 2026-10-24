@@ -22,6 +22,7 @@ export function loadConfig() {
   const raw = JSON.parse(readFileSync(resolve(ROOT, 'seyrin.config.json'), 'utf8'));
   const server = { port: 4477, headed: true, runTimeoutSeconds: 240, maxSteps: 30, ...(raw.server || {}) };
   if (process.env.KANE_HEADLESS === '1') server.headed = false;
+  if (process.env.SEYRIN_PORT) server.port = Number(process.env.SEYRIN_PORT);
   const apps = (raw.apps || []).map((app) => ({
     ...app,
     repo: app.repo ? (isAbsolute(app.repo) ? app.repo : resolve(ROOT, app.repo)) : null,
