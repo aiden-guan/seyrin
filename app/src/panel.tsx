@@ -195,7 +195,7 @@ export function SeyrinPanel({ email, health, onTask, onUseReply }: Props) {
     const win = window.open('', '_blank');
     try {
       win?.document.write(
-        '<title>Kane evidence</title><body style="margin:0;background:#0b0b0d;color:#8a8a93;font:14px ui-monospace,monospace;padding:32px">Starting Kane’s evidence viewer…</body>',
+        '<title>Kane evidence</title><body style="margin:0;background:#f7f7f5;color:#45454d;font:14px/1.6 system-ui,sans-serif;padding:40px"><p id="m">Starting Kane’s evidence viewer…</p></body>',
       );
     } catch {}
     try {
@@ -203,8 +203,12 @@ export function SeyrinPanel({ email, health, onTask, onUseReply }: Props) {
       if (win) win.location.href = viewer;
       else window.open(viewer, '_blank', 'noopener');
     } catch (error) {
-      win?.close();
-      setActionError(error instanceof Error ? error.message : String(error));
+      const message = error instanceof Error ? error.message : String(error);
+      // Say why in the tab itself; the panel's error line is often scrolled out of view.
+      const line = win?.document.getElementById('m');
+      if (line) line.textContent = message;
+      else win?.close();
+      setActionError(message);
     }
   };
 
