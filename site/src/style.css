@@ -1,0 +1,375 @@
+/* Seyrin landing page. Calm paper outside the screen, a violet night inside it; pixel type for the machine,
+   an italic serif for the life you get back. */
+
+:root {
+  --paper: #f5f4f0;
+  --ink: #16171a;
+  --ink-2: #3a3d43;
+  --violet: #5b4fd0;
+  --lav: #c9c2ff;
+  --night: #14112f;
+  --night-ink: #f4f2ff;
+  --pixel: 'Pixelify Sans', ui-monospace, monospace;
+  --display: 'Jersey 15', 'Pixelify Sans', ui-monospace, monospace;
+  --serif: 'Instrument Serif', ui-serif, Georgia, serif;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--pixel);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+#stage {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: var(--paper);
+}
+
+.scroll {
+  width: 1px;
+}
+
+/* --- top bar ------------------------------------------------------------------------------------- */
+
+.bar {
+  position: fixed;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: max(18px, env(safe-area-inset-top)) clamp(16px, 3vw, 32px) 0;
+  font-size: 17px;
+  transition: color 0.5s;
+}
+
+.bar a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2vw, 22px);
+}
+
+.nav-text {
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.nav-text:hover,
+.nav-text:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Opens the inbox app that `npm start` serves. */
+.link {
+  padding: 6px 12px;
+  border: 2px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: 3px 3px 0 var(--violet);
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: transform 0.15s, box-shadow 0.15s, background-color 0.5s, color 0.5s, border-color 0.5s;
+}
+
+.bar .link {
+  color: var(--paper);
+}
+
+.link:hover,
+.link:focus-visible {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--violet);
+}
+
+body.is-dark .bar {
+  color: var(--night-ink);
+}
+
+body.is-dark .bar .link {
+  border-color: var(--night-ink);
+  background: var(--night-ink);
+  color: var(--night);
+}
+
+/* --- hero -------------------------------------------------------------------------------------- */
+
+.hud {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hero {
+  position: absolute;
+  top: clamp(68px, 11vh, 128px);
+  left: 0;
+  right: 0;
+  padding: 0 16px;
+  text-align: center;
+  will-change: opacity, transform;
+}
+
+.hero h1 {
+  margin: 0;
+  font-weight: 400;
+}
+
+.h1-a {
+  display: block;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(50px, 9.2vw, 140px);
+  line-height: 0.9;
+  letter-spacing: 0.01em;
+}
+
+.h1-b {
+  display: block;
+  margin-top: clamp(6px, 1.2vh, 14px);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(22px, 3.3vw, 48px);
+  line-height: 1.1;
+  color: var(--ink-2);
+}
+
+.star {
+  display: inline-block;
+  width: 0.42em;
+  height: 0.42em;
+  margin: 0 0.04em;
+  vertical-align: 0.3em;
+}
+
+.star svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: var(--violet);
+  shape-rendering: crispEdges;
+}
+
+.star .glint {
+  fill: var(--lav);
+  animation: glint 1.6s steps(1) infinite;
+}
+
+@keyframes glint {
+  50% {
+    opacity: 0;
+  }
+}
+
+.cue {
+  position: absolute;
+  left: 50%;
+  bottom: max(22px, env(safe-area-inset-bottom));
+  margin: 0;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.cue i {
+  width: 6px;
+  height: 6px;
+  background: var(--ink);
+  box-shadow: 0 6px 0 var(--ink), -6px 0 0 var(--ink), 6px 0 0 var(--ink);
+  transform: translateY(-4px);
+  animation: bob 1.4s steps(2) infinite;
+}
+
+@keyframes bob {
+  50% {
+    transform: translateY(2px);
+  }
+}
+
+/* --- captions inside the screen ---------------------------------------------------------------- */
+
+.beats {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.beats li {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(30px, 10vh, 96px);
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  color: var(--night-ink);
+  text-align: center;
+  will-change: opacity, transform;
+}
+
+.beats .n {
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  color: var(--lav);
+}
+
+.beats .t {
+  font-size: clamp(22px, 3vw, 40px);
+  line-height: 1.1;
+  text-shadow: 0 0 2px var(--night), 0 0 10px var(--night), 0 0 22px rgba(139, 128, 255, 0.5);
+}
+
+/* --- the end ------------------------------------------------------------------------------------- */
+
+.end {
+  position: absolute;
+  top: clamp(68px, 11vh, 128px);
+  left: 0;
+  right: 0;
+  padding: 0 16px;
+  text-align: center;
+  opacity: 0;
+}
+
+.end.is-on {
+  pointer-events: auto;
+}
+
+.end-a {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(44px, 7.6vw, 114px);
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+}
+
+.end-b {
+  margin: clamp(6px, 1.2vh, 14px) 0 clamp(16px, 3vh, 28px);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(22px, 3.1vw, 44px);
+  color: var(--ink-2);
+}
+
+.cta {
+  display: inline-block;
+  padding: 13px 22px 12px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 17px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 5px 5px 0 var(--violet);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.cta:hover,
+.cta:focus-visible {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--violet);
+}
+
+/* --- still version (reduced motion, or no WebGL2) ---------------------------------------------- */
+
+body.is-static .hud {
+  position: static;
+  padding: 96px 0 64px;
+  pointer-events: auto;
+}
+
+body.is-static .hero,
+body.is-static .end,
+body.is-static .beats li {
+  position: static;
+  opacity: 1;
+  transform: none;
+}
+
+body.is-static .cue {
+  display: none;
+}
+
+body.is-static .beats li {
+  margin-top: 56px;
+  color: var(--ink);
+}
+
+body.is-static .beats .n {
+  color: var(--violet);
+}
+
+body.is-static .beats .t {
+  text-shadow: none;
+}
+
+.still {
+  display: block;
+  width: min(92vw, 720px);
+  margin: 20px auto 0;
+  image-rendering: pixelated;
+}
+
+canvas.still {
+  border: 2px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--violet);
+}
+
+@media (max-width: 700px) {
+  .bar {
+    font-size: 15px;
+  }
+
+  .link,
+  .nav-text {
+    font-size: 12px;
+  }
+
+  .link {
+    padding: 5px 9px;
+  }
+}
