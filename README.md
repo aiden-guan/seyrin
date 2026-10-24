@@ -69,6 +69,7 @@ npm start                                  # Perch on :4480, Seyrin on http://12
 - `core/`: request detection, the trust and risk policy, injection and credential filters, Kane objectives, and replies. Pure TypeScript with tests; the server loads it directly.
 - `server/`: the HTTP and SSE API (`docs/API.md`), tasks, Seyrin Docs, the Kane runner, and the coding agents (OpenAI, Claude Code, Codex, or any command).
 - `app/`: the inbox (React).
+- `site/`: the landing page (Vite, TypeScript and WebGL). `npm run site:dev` serves it and `npm run site:build` writes `site/dist`. Its top-right Open app button goes to the inbox at http://127.0.0.1:4477/. The pixel beach comes from `site/art/render-beach.mjs` (`npm run site:art`).
 - `demo-app/`: Perch, the fictional booking product the demo mail is about. It has two planted bugs.
 - `gate/`, `specs/`, `.github/`: the Kane gate, the specs and CI.
 

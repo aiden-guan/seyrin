@@ -46,6 +46,7 @@ npm run gate                  # replay saved Kane flows; npm run suite = kane-cl
 - `demo-app/`: Perch, with 2 planted bugs: upgrade buttons read `data-plan-id`; the sign-up email regex rejects `+`.
 - `gate/`: Kane gate (Claude Code Stop hook, `--watch`, `--check`, `--loop`) and `spec-to-flows`.
 - `bench/`: scenario, measurements, human model (`rates.json`), Proof-tab reporter.
+- `site/`: landing page (`npm run site:dev`, `npm run site:build`). `site/art/render-beach.mjs` renders the pixel beach to `site/src/assets`; `site/src/inner.ts` draws the story inside the screen; `stage.ts` is the WebGL compositor. The Open app button points at http://127.0.0.1:4477/ (`VITE_APP_URL` overrides it at build time).
 
 ## State (Oct 24, ~12:25 PT)
 - All three task types run end to end with real Kane and OpenAI: doc (verified sections and facts), bug report (reproduce → fix → verify → regression flow), and site change (approve → change → verify). Impersonation and money requests are refused.
