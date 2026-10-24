@@ -53,6 +53,11 @@ jobs:
       - name: Replay Kane flows
         run: node gate/kane-gate.mjs --check demo-app
 
+      - name: Run the saved flows as one Kane suite
+        if: always()
+        working-directory: demo-app
+        run: kane-cli testrun run --agent --name "Perch regression suite" < /dev/null | tee ../testrun.ndjson | grep -E '"type":"(testrun_done|testrun_summary)"' || true
+
       - name: Upload Kane evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -61,4 +66,5 @@ jobs:
           path: |
             demo-app/.testmuai/evidence
             .data/gate.ndjson
+            testrun.ndjson
           if-no-files-found: ignore

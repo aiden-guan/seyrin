@@ -14,6 +14,7 @@
     "demo:reset": "curl -s -X POST http://127.0.0.1:4477/v1/admin/reset || true",
     "gate": "node gate/kane-gate.mjs --check demo-app",
     "gate:watch": "node gate/kane-gate.mjs --watch demo-app",
+    "suite": "cd demo-app && kane-cli testrun run --agent --name \"Perch regression suite\"",
     "spec": "node gate/spec-to-flows.mjs specs/perch-core.md",
     "bench": "node bench/scenario.mjs && node bench/run.mjs && node bench/compare.mjs",
     "bench:compare": "node bench/compare.mjs",
