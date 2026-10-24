@@ -80,11 +80,11 @@ export function createTasks({ config, core, baseUrl }) {
     changed(task);
   }
 
-  async function kaneCheck(task, { objective, url, name, cwd, label, keepEvidence }) {
+  async function kaneCheck(task, { objective, url, name, cwd, label, keepEvidence, bugDetection }) {
     const attempt = task.runs.length + 1;
     log(task, 'kane', `kane-cli run ${JSON.stringify(objective)}${name ? ` --name ${name}` : ''}`);
     const run = await kane.run(
-      { objective, url, name, cwd, label, attempt, keepEvidence },
+      { objective, url, name, cwd, label, attempt, keepEvidence, bugDetection },
       {
         onStart: (r) => {
           task.run = r;
@@ -253,7 +253,7 @@ export function createTasks({ config, core, baseUrl }) {
   async function doReproduce(task) {
     const app = config.apps.find((a) => a.id === task.appId);
     phase(task, 'verifying', `Kane is following ${firstName(task.requester)}'s steps…`);
-    const check = await kaneCheck(task, { objective: task.plan.verify, url: task.spec.url, cwd: app?.repo || ROOT, label: 'Reproduce', keepEvidence: `repro-${slug(task.threadId)}` });
+    const check = await kaneCheck(task, { objective: task.plan.verify, url: task.spec.url, cwd: app?.repo || ROOT, label: 'Reproduce', keepEvidence: `repro-${slug(task.threadId)}`, bugDetection: 'stop' });
     task.verdict = check.verdict;
     task.draftReply = core.draftReproReply({ verdict: check.verdict, spec: task.spec, senderName: task.requester.name });
     if (check.verdict === 'reproduced') {

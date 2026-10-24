@@ -15,7 +15,7 @@ export function createKaneRunner({ config }) {
   let queue = Promise.resolve();
 
   /**
-   * @param {{objective: string, url: string, name?: string, cwd?: string, label: string, attempt: number, keepEvidence?: string}} job
+   * @param {{objective: string, url: string, name?: string, cwd?: string, label: string, attempt: number, keepEvidence?: string, bugDetection?: 'off' | 'stop' | 'continue'}} job
    * @param {{onStart?: (run) => void, onLine?: (line) => void, onStep?: (run) => void}} hooks
    */
   function run(job, hooks = {}) {
@@ -29,6 +29,8 @@ export function createKaneRunner({ config }) {
       const args = ['run', job.objective, '--agent', '--url', job.url, '--max-steps', String(config.server.maxSteps), '--timeout', String(config.server.runTimeoutSeconds)];
       if (!config.server.headed) args.push('--headless');
       if (job.name) args.push('--name', job.name);
+      // Kane only reports a confirmed product bug (result_code 740) with bug detection on; it's off by default.
+      if (job.bugDetection) args.push('--bug-detection', job.bugDetection);
       let [cmd, argv] = kaneCommand(args);
       // Hack-day run reports: `kanehack report` runs Kane, passes its NDJSON through, and records a redacted summary.
       if (process.env.KANEHACK_REPORT === '1' && !process.env.KANE_CLI_BIN) {
