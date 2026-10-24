@@ -14,7 +14,11 @@
     "demo:reset": "curl -s -X POST http://127.0.0.1:4477/v1/admin/reset || true",
     "gate": "node gate/kane-gate.mjs --check demo-app",
     "gate:watch": "node gate/kane-gate.mjs --watch demo-app",
-    "spec": "node gate/spec-to-flows.mjs specs/perch-core.md"
+    "spec": "node gate/spec-to-flows.mjs specs/perch-core.md",
+    "bench": "node bench/scenario.mjs && node bench/run.mjs && node bench/compare.mjs",
+    "bench:compare": "node bench/compare.mjs",
+    "bench:measure": "node bench/run.mjs",
+    "bench:manual": "node bench/stopwatch.mjs"
   },
   "dependencies": {
     "react": "^19.1.0",

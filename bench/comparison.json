@@ -1,0 +1,518 @@
+{
+  "measuredAt": "2026-10-24T18:55:43.591Z",
+  "rows": [
+    {
+      "subject": "One-pager for the Acme Yoga pilot",
+      "kind": "document",
+      "outcome": "done",
+      "human": {
+        "low": 910,
+        "typical": 1492,
+        "high": 2658,
+        "steps": [
+          {
+            "label": "Read the email",
+            "low": 11,
+            "typical": 14,
+            "high": 19,
+            "basis": "49 words at 238 wpm"
+          },
+          {
+            "label": "Gather the facts (pricing, dates, contact)",
+            "low": 60,
+            "typical": 120,
+            "high": 240,
+            "basis": "Assumption: look up pricing and re-read the request"
+          },
+          {
+            "label": "Think about what to say (the one-pager)",
+            "low": 120,
+            "typical": 240,
+            "high": 480,
+            "basis": "Assumption: planning before typing (see rates.json)"
+          },
+          {
+            "label": "Draft the one-pager: 300 words",
+            "low": 420,
+            "typical": 600,
+            "high": 960,
+            "basis": "300 words at 30 wpm composing"
+          },
+          {
+            "label": "Re-read and refine the one-pager",
+            "low": 107,
+            "typical": 214,
+            "high": 428,
+            "basis": "2 read-throughs at 238 wpm plus retyping 20% of it"
+          },
+          {
+            "label": "Format headings and check every section is there",
+            "low": 47,
+            "typical": 78,
+            "high": 141,
+            "basis": "KLM plus a minute of formatting (assumption)"
+          },
+          {
+            "label": "Check the numbers against the email",
+            "low": 62,
+            "typical": 88,
+            "high": 141,
+            "basis": "Re-reading at 238 wpm"
+          },
+          {
+            "label": "Share the document",
+            "low": 6,
+            "typical": 9,
+            "high": 15,
+            "basis": "KLM"
+          },
+          {
+            "label": "Think about what to say (the reply)",
+            "low": 23,
+            "typical": 45,
+            "high": 90,
+            "basis": "Assumption: planning before typing (see rates.json)"
+          },
+          {
+            "label": "Draft the reply: 30 words",
+            "low": 42,
+            "typical": 60,
+            "high": 96,
+            "basis": "30 words at 30 wpm composing"
+          },
+          {
+            "label": "Re-read and refine the reply",
+            "low": 12,
+            "typical": 24,
+            "high": 48,
+            "basis": "2 read-throughs at 238 wpm plus retyping 20% of it"
+          }
+        ]
+      },
+      "seyrin": {
+        "machineSeconds": 49,
+        "attentionSeconds": 34,
+        "attention": [
+          {
+            "label": "Read Seyrin’s summary card",
+            "seconds": 16,
+            "basis": "About 60 words at 238 wpm"
+          },
+          {
+            "label": "Approve the plan or the fix",
+            "seconds": 3,
+            "basis": "KLM: one click"
+          },
+          {
+            "label": "Read the drafted reply and send it",
+            "seconds": 15,
+            "basis": "Reading at 238 wpm plus one click"
+          }
+        ],
+        "kaneRuns": 1,
+        "verified": true
+      }
+    },
+    {
+      "subject": "Upgrade button does nothing",
+      "kind": "bug_report",
+      "outcome": "done",
+      "human": {
+        "low": 770,
+        "typical": 1639,
+        "high": 3377,
+        "steps": [
+          {
+            "label": "Read the email",
+            "low": 8,
+            "typical": 10,
+            "high": 14,
+            "basis": "34 words at 238 wpm"
+          },
+          {
+            "label": "Open the app at the reported page",
+            "low": 9,
+            "typical": 13,
+            "high": 20,
+            "basis": "KLM: point, click, type the URL, page load (assumed 2 s)"
+          },
+          {
+            "label": "Follow the steps and try again a few times",
+            "low": 14,
+            "typical": 28,
+            "high": 56,
+            "basis": "KLM: 3 attempts, each a click plus about 5 s watching (assumption)"
+          },
+          {
+            "label": "Open devtools and check the console",
+            "low": 11,
+            "typical": 21,
+            "high": 42,
+            "basis": "KLM plus about 15 s reading the console (assumption)"
+          },
+          {
+            "label": "Find the code behind the button",
+            "low": 72,
+            "typical": 180,
+            "high": 396,
+            "basis": "Assumption: search the repo for the handler in a small app"
+          },
+          {
+            "label": "Work out why it fails",
+            "low": 90,
+            "typical": 300,
+            "high": 720,
+            "basis": "Assumption: a one-line bug (wrong data attribute) in a 30-line file"
+          },
+          {
+            "label": "Edit, save and reload",
+            "low": 11,
+            "typical": 15,
+            "high": 24,
+            "basis": "KLM"
+          },
+          {
+            "label": "Re-test the customer’s steps",
+            "low": 11,
+            "typical": 16,
+            "high": 25,
+            "basis": "KLM"
+          },
+          {
+            "label": "Write a regression test for it",
+            "low": 450,
+            "typical": 900,
+            "high": 1800,
+            "basis": "Assumption: a Playwright test for one flow, from scratch"
+          },
+          {
+            "label": "Think about what to say (the reply)",
+            "low": 23,
+            "typical": 45,
+            "high": 90,
+            "basis": "Assumption: planning before typing (see rates.json)"
+          },
+          {
+            "label": "Draft the reply: 40 words",
+            "low": 56,
+            "typical": 80,
+            "high": 128,
+            "basis": "40 words at 30 wpm composing"
+          },
+          {
+            "label": "Re-read and refine the reply",
+            "low": 15,
+            "typical": 31,
+            "high": 62,
+            "basis": "2 read-throughs at 238 wpm plus retyping 20% of it"
+          }
+        ]
+      },
+      "seyrin": {
+        "machineSeconds": 118,
+        "attentionSeconds": 29,
+        "attention": [
+          {
+            "label": "Read Seyrin’s summary card",
+            "seconds": 16,
+            "basis": "About 60 words at 238 wpm"
+          },
+          {
+            "label": "Approve the plan or the fix",
+            "seconds": 3,
+            "basis": "KLM: one click"
+          },
+          {
+            "label": "Read the drafted reply and send it",
+            "seconds": 10,
+            "basis": "Reading at 238 wpm plus one click"
+          }
+        ],
+        "kaneRuns": 2,
+        "verified": true
+      }
+    },
+    {
+      "subject": "Pro price → $15",
+      "kind": "site_change",
+      "outcome": "done",
+      "human": {
+        "low": 148,
+        "typical": 289,
+        "high": 574,
+        "steps": [
+          {
+            "label": "Read the email",
+            "low": 5,
+            "typical": 6,
+            "high": 9,
+            "basis": "19 words at 238 wpm"
+          },
+          {
+            "label": "Open the repo and find where the price is set",
+            "low": 48,
+            "typical": 120,
+            "high": 264,
+            "basis": "Assumption: the price appears in the page and in the checkout script"
+          },
+          {
+            "label": "Edit both places and save",
+            "low": 11,
+            "typical": 16,
+            "high": 26,
+            "basis": "KLM"
+          },
+          {
+            "label": "Run the site and check the pricing page and checkout",
+            "low": 16,
+            "typical": 32,
+            "high": 64,
+            "basis": "KLM plus about 20 s to start the server (assumption)"
+          },
+          {
+            "label": "Think about what to say (the reply)",
+            "low": 23,
+            "typical": 45,
+            "high": 90,
+            "basis": "Assumption: planning before typing (see rates.json)"
+          },
+          {
+            "label": "Draft the reply: 25 words",
+            "low": 35,
+            "typical": 50,
+            "high": 80,
+            "basis": "25 words at 30 wpm composing"
+          },
+          {
+            "label": "Re-read and refine the reply",
+            "low": 10,
+            "typical": 20,
+            "high": 41,
+            "basis": "2 read-throughs at 238 wpm plus retyping 20% of it"
+          }
+        ]
+      },
+      "seyrin": {
+        "machineSeconds": 37,
+        "attentionSeconds": 28,
+        "attention": [
+          {
+            "label": "Read Seyrin’s summary card",
+            "seconds": 16,
+            "basis": "About 60 words at 238 wpm"
+          },
+          {
+            "label": "Approve the plan or the fix",
+            "seconds": 3,
+            "basis": "KLM: one click"
+          },
+          {
+            "label": "Read the drafted reply and send it",
+            "seconds": 9,
+            "basis": "Reading at 238 wpm plus one click"
+          }
+        ],
+        "kaneRuns": 1,
+        "verified": true
+      }
+    },
+    {
+      "subject": "Can't create an account with my email",
+      "kind": "bug_report",
+      "outcome": "done",
+      "human": {
+        "low": 771,
+        "typical": 1641,
+        "high": 3379,
+        "steps": [
+          {
+            "label": "Read the email",
+            "low": 9,
+            "typical": 12,
+            "high": 16,
+            "basis": "41 words at 238 wpm"
+          },
+          {
+            "label": "Open the app at the reported page",
+            "low": 9,
+            "typical": 13,
+            "high": 20,
+            "basis": "KLM: point, click, type the URL, page load (assumed 2 s)"
+          },
+          {
+            "label": "Follow the steps and try again a few times",
+            "low": 14,
+            "typical": 28,
+            "high": 56,
+            "basis": "KLM: 3 attempts, each a click plus about 5 s watching (assumption)"
+          },
+          {
+            "label": "Open devtools and check the console",
+            "low": 11,
+            "typical": 21,
+            "high": 42,
+            "basis": "KLM plus about 15 s reading the console (assumption)"
+          },
+          {
+            "label": "Find the code behind the button",
+            "low": 72,
+            "typical": 180,
+            "high": 396,
+            "basis": "Assumption: search the repo for the handler in a small app"
+          },
+          {
+            "label": "Work out why it fails",
+            "low": 90,
+            "typical": 300,
+            "high": 720,
+            "basis": "Assumption: a one-line bug (wrong data attribute) in a 30-line file"
+          },
+          {
+            "label": "Edit, save and reload",
+            "low": 11,
+            "typical": 15,
+            "high": 24,
+            "basis": "KLM"
+          },
+          {
+            "label": "Re-test the customer’s steps",
+            "low": 11,
+            "typical": 16,
+            "high": 25,
+            "basis": "KLM"
+          },
+          {
+            "label": "Write a regression test for it",
+            "low": 450,
+            "typical": 900,
+            "high": 1800,
+            "basis": "Assumption: a Playwright test for one flow, from scratch"
+          },
+          {
+            "label": "Think about what to say (the reply)",
+            "low": 23,
+            "typical": 45,
+            "high": 90,
+            "basis": "Assumption: planning before typing (see rates.json)"
+          },
+          {
+            "label": "Draft the reply: 40 words",
+            "low": 56,
+            "typical": 80,
+            "high": 128,
+            "basis": "40 words at 30 wpm composing"
+          },
+          {
+            "label": "Re-read and refine the reply",
+            "low": 15,
+            "typical": 31,
+            "high": 62,
+            "basis": "2 read-throughs at 238 wpm plus retyping 20% of it"
+          }
+        ]
+      },
+      "seyrin": {
+        "machineSeconds": 125,
+        "attentionSeconds": 29,
+        "attention": [
+          {
+            "label": "Read Seyrin’s summary card",
+            "seconds": 16,
+            "basis": "About 60 words at 238 wpm"
+          },
+          {
+            "label": "Approve the plan or the fix",
+            "seconds": 3,
+            "basis": "KLM: one click"
+          },
+          {
+            "label": "Read the drafted reply and send it",
+            "seconds": 10,
+            "basis": "Reading at 238 wpm plus one click"
+          }
+        ],
+        "kaneRuns": 2,
+        "verified": true
+      }
+    },
+    {
+      "subject": "Pricing page is blank for me",
+      "kind": "bug_report",
+      "outcome": "not_reproduced",
+      "human": {
+        "low": 136,
+        "typical": 228,
+        "high": 412,
+        "steps": [
+          {
+            "label": "Read the email",
+            "low": 8,
+            "typical": 10,
+            "high": 14,
+            "basis": "33 words at 238 wpm"
+          },
+          {
+            "label": "Open the app at the reported page",
+            "low": 9,
+            "typical": 13,
+            "high": 20,
+            "basis": "KLM: point, click, type the URL, page load (assumed 2 s)"
+          },
+          {
+            "label": "Follow the steps and try again a few times",
+            "low": 14,
+            "typical": 28,
+            "high": 56,
+            "basis": "KLM: 3 attempts, each a click plus about 5 s watching (assumption)"
+          },
+          {
+            "label": "Open devtools and check the console",
+            "low": 11,
+            "typical": 21,
+            "high": 42,
+            "basis": "KLM plus about 15 s reading the console (assumption)"
+          },
+          {
+            "label": "Think about what to say (the reply)",
+            "low": 23,
+            "typical": 45,
+            "high": 90,
+            "basis": "Assumption: planning before typing (see rates.json)"
+          },
+          {
+            "label": "Draft the reply: 40 words",
+            "low": 56,
+            "typical": 80,
+            "high": 128,
+            "basis": "40 words at 30 wpm composing"
+          },
+          {
+            "label": "Re-read and refine the reply",
+            "low": 15,
+            "typical": 31,
+            "high": 62,
+            "basis": "2 read-throughs at 238 wpm plus retyping 20% of it"
+          }
+        ]
+      },
+      "seyrin": {
+        "machineSeconds": 34,
+        "attentionSeconds": 29,
+        "attention": [
+          {
+            "label": "Read Seyrin’s summary card",
+            "seconds": 16,
+            "basis": "About 60 words at 238 wpm"
+          },
+          {
+            "label": "Read the drafted reply and send it",
+            "seconds": 13,
+            "basis": "Reading at 238 wpm plus one click"
+          }
+        ],
+        "kaneRuns": 1,
+        "verified": true
+      }
+    }
+  ]
+}

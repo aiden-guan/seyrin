@@ -1,0 +1,25 @@
+{
+  "readingWpm": 238,
+  "transcribeWpm": 52,
+  "composeWpm": 30,
+  "klm": {
+    "K": 0.2,
+    "P": 1.1,
+    "B": 0.2,
+    "H": 0.4,
+    "M": 1.35
+  },
+  "notes": {
+    "readingWpm": "Silent reading of non-fiction, adults: Brysbaert (2019) meta-analysis of 190 studies.",
+    "transcribeWpm": "Average of 168,000 people typing online: Dhakal et al. (CHI 2018), reported as 52 wpm.",
+    "composeWpm": "Composing is slower than copying because you think while you type. Derived: 52 wpm x 0.58, the composing-to-copying ratio Karat et al. measured (19 / 32.5). Edit this if you have your own number.",
+    "klm": "Keystroke-Level Model operator times (Card, Moran & Newell). K set to 0.2 s, a 52 wpm typist (60 / (52 x 5 characters) = 0.23 s, rounded toward the model's skilled band).",
+    "writing": "Writing is planning, drafting and reviewing (Hayes & Flower's model of the writing process). Drafting uses composeWpm. Planning is an assumption: 45 s to decide what a short reply says, 4 min to outline a one-pager. Refining is re-reading the draft twice at readingWpm and retyping about 20% of it at transcribeWpm (assumption)."
+  },
+  "writing": {
+    "planEmailSeconds": 45,
+    "planDocSeconds": 240,
+    "revisionPasses": 2,
+    "revisedShare": 0.2
+  }
+}

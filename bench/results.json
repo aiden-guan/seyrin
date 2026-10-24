@@ -1,0 +1,117 @@
+{
+  "measuredAt": "2026-10-24T18:55:54.824Z",
+  "tasks": [
+    {
+      "kind": "document",
+      "subject": "One-pager for the Acme Yoga pilot",
+      "decision": "auto",
+      "phase": "done",
+      "kaneRuns": 1,
+      "firstVerdictSeconds": 49,
+      "firstKaneRunSeconds": 42,
+      "verifiedRunSeconds": 42,
+      "approvedToVerifiedSeconds": null,
+      "fixAttempts": 1,
+      "gated": true
+    },
+    {
+      "kind": "bug_report",
+      "subject": "Upgrade button does nothing",
+      "decision": "auto",
+      "phase": "done",
+      "kaneRuns": 2,
+      "firstVerdictSeconds": 77,
+      "firstKaneRunSeconds": 75,
+      "verifiedRunSeconds": 38,
+      "approvedToVerifiedSeconds": 41,
+      "fixAttempts": 1,
+      "gated": true
+    },
+    {
+      "kind": "site_change",
+      "subject": "Pro price → $15",
+      "decision": "approve",
+      "phase": "done",
+      "kaneRuns": 1,
+      "firstVerdictSeconds": 37,
+      "firstKaneRunSeconds": 32,
+      "verifiedRunSeconds": 32,
+      "approvedToVerifiedSeconds": 35,
+      "fixAttempts": 1,
+      "gated": true
+    },
+    {
+      "kind": "bug_report",
+      "subject": "Can't create an account with my email",
+      "decision": "auto",
+      "phase": "done",
+      "kaneRuns": 2,
+      "firstVerdictSeconds": 62,
+      "firstKaneRunSeconds": 60,
+      "verifiedRunSeconds": 60,
+      "approvedToVerifiedSeconds": 62,
+      "fixAttempts": 1,
+      "gated": true
+    },
+    {
+      "kind": "document",
+      "subject": "Urgent: Acme deposit",
+      "decision": "refuse",
+      "phase": "refused",
+      "kaneRuns": 0,
+      "firstVerdictSeconds": null,
+      "firstKaneRunSeconds": null,
+      "verifiedRunSeconds": null,
+      "approvedToVerifiedSeconds": null,
+      "fixAttempts": 0,
+      "gated": false
+    },
+    {
+      "kind": "bug_report",
+      "subject": "Pricing page is blank for me",
+      "decision": "auto",
+      "phase": "not_reproduced",
+      "kaneRuns": 1,
+      "firstVerdictSeconds": 34,
+      "firstKaneRunSeconds": 31,
+      "verifiedRunSeconds": 31,
+      "approvedToVerifiedSeconds": null,
+      "fixAttempts": 0,
+      "gated": true
+    }
+  ],
+  "gatedRate": {
+    "gated": 5,
+    "actionable": 5,
+    "refusedOrHeld": 2
+  },
+  "replays": [
+    {
+      "flow": "home_start_free",
+      "replaySeconds": 10.4,
+      "replayOk": true,
+      "freshSeconds": 36.8,
+      "freshOk": true,
+      "measuredAt": "2026-10-24 (clean bench run)"
+    },
+    {
+      "flow": "pricing_plans",
+      "replaySeconds": 66.5,
+      "replayOk": false,
+      "freshSeconds": 37,
+      "freshOk": false,
+      "measuredAt": "2026-10-24 (clean bench run)"
+    },
+    {
+      "flow": "signup_basic",
+      "replaySeconds": 61.3,
+      "replayOk": true,
+      "freshSeconds": 59.1,
+      "freshOk": true,
+      "measuredAt": "2026-10-24 (clean bench run)"
+    }
+  ],
+  "replayAvg": 46.1,
+  "freshAvg": 44.3,
+  "manual": []
+}
