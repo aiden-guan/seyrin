@@ -9,6 +9,9 @@
     "start:offline": "KANE_CLI_BIN=scripts/fake-kane-cli.mjs node scripts/start.mjs",
     "app:build": "vite build app",
     "app:dev": "vite app",
+    "site:dev": "vite site",
+    "site:build": "vite build site",
+    "site:art": "node site/art/render-beach.mjs",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "demo:reset": "curl -s -X POST http://127.0.0.1:4477/v1/admin/reset || true",
@@ -26,7 +29,9 @@
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",
     "@fontsource-variable/geist-mono": "^5.3.0",
+    "@fontsource/instrument-serif": "^5.3.0",
     "@fontsource/jersey-15": "^5.3.0",
+    "@fontsource/pixelify-sans": "^5.3.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },

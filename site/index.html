@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="Seyrin puts agents in your inbox that do what your email asks, and Kane CLI checks the work in a real browser. So you can spend time elsewhere." />
+    <meta name="theme-color" content="#f5f4f0" />
+    <title>Seyrin · Get sh*t done</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23272a4d'/%3E%3Cstop offset='1' stop-color='%235b4fd0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Cpath d='M20.6 11.2c-.9-1.5-2.6-2.3-4.6-2.3-2.6 0-4.4 1.4-4.4 3.3 0 4.6 9.4 2.7 9.4 7.4 0 2.1-2 3.6-4.9 3.6-2.2 0-4-.9-5-2.5' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round'/%3E%3Ccircle cx='23.6' cy='7.6' r='1.9' fill='%23c9c2ff'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <canvas id="stage" aria-hidden="true"></canvas>
+
+    <header class="bar">
+      <a class="brand" href="./" aria-label="Seyrin">
+        <svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true">
+          <defs>
+            <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#272a4d" />
+              <stop offset="1" stop-color="#5b4fd0" />
+            </linearGradient>
+          </defs>
+          <rect width="32" height="32" rx="9" fill="url(#mark)" />
+          <path d="M20.6 11.2c-.9-1.5-2.6-2.3-4.6-2.3-2.6 0-4.4 1.4-4.4 3.3 0 4.6 9.4 2.7 9.4 7.4 0 2.1-2 3.6-4.9 3.6-2.2 0-4-.9-5-2.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" />
+          <circle cx="23.6" cy="7.6" r="1.9" fill="#c9c2ff" />
+        </svg>
+        <span>Seyrin</span>
+      </a>
+      <nav class="nav">
+        <a class="nav-text" href="https://github.com/aiden-guan/seyrin">GitHub</a>
+        <a class="link" id="open-app" href="http://127.0.0.1:4477/">Open app</a>
+      </nav>
+    </header>
+
+    <main class="hud">
+      <section class="hero">
+        <h1>
+          <span class="h1-a">Get Sh<span class="star" aria-label="*"><svg viewBox="0 0 7 7" aria-hidden="true"><path d="M3 0h1v2H3zM3 5h1v2H3zM0 3h2v1H0zM5 3h2v1H5zM2 2h3v3H2z" /><path class="glint" d="M1 1h1v1H1zM5 1h1v1H5zM1 5h1v1H1zM5 5h1v1H5z" /></svg></span>t Done,</span>
+          <span class="h1-b">So You Can Spend Time Elsewhere</span>
+        </h1>
+      </section>
+      <p class="cue" aria-hidden="true"><span>Scroll</span><i></i></p>
+
+      <ol class="beats">
+        <li data-beat="inbox"><span class="n">01</span><span class="t">Your inbox is full of work.</span></li>
+        <li data-beat="work"><span class="n">02</span><span class="t">Agents do what each email asks.</span></li>
+        <li data-beat="verify"><span class="n">03</span><span class="t">Kane CLI checks it in a real browser.</span></li>
+        <li data-beat="guard"><span class="n">04</span><span class="t">Scams bounce off.</span></li>
+        <li data-beat="reply"><span class="n">05</span><span class="t">Done. Verified. Reply drafted.</span></li>
+      </ol>
+
+      <section class="end">
+        <p class="end-a">Sh<span class="star" aria-label="*"><svg viewBox="0 0 7 7" aria-hidden="true"><path d="M3 0h1v2H3zM3 5h1v2H3zM0 3h2v1H0zM5 3h2v1H5zM2 2h3v3H2z" /><path class="glint" d="M1 1h1v1H1zM5 1h1v1H5zM1 5h1v1H1zM5 5h1v1H5z" /></svg></span>t: done.</p>
+        <p class="end-b">Now go spend time elsewhere.</p>
+        <a class="cta" href="https://github.com/aiden-guan/seyrin">Get Seyrin</a>
+      </section>
+    </main>
+
+    <div class="scroll" aria-hidden="true"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

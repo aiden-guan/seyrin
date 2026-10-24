@@ -1,4 +1,4 @@
-# Unit tests and the app build on every push. When the repo has Kane credentials (secrets KANE_USERNAME
+# Unit tests, the app build and the landing page build on every push. When the repo has Kane credentials (secrets KANE_USERNAME
 # and KANE_ACCESS_KEY; optional KANE_PROJECT_ID, KANE_FOLDER_ID), it also replays every saved Kane flow
 # (demo-app/.testmuai/tests/*_test.md) against Perch, then runs them as one suite with kane-cli testrun.
 name: Kane gate
@@ -19,6 +19,7 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npx vite build app
+      - run: npx vite build site
 
   kane:
     runs-on: ubuntu-latest
