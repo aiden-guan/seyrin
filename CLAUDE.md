@@ -50,9 +50,6 @@ npm run gate                  # replay saved Kane flows; npm run suite = kane-cl
 ## State (Oct 24, ~12:25 PT)
 - All three task types run end to end with real Kane and OpenAI: doc (verified sections and facts), bug report (reproduce → fix → verify → regression flow), and site change (approve → change → verify). Impersonation and money requests are refused.
 - **Benchmark:** 5 tasks take about 88 min by hand (modeled) vs 6.1 min for Seyrin (measured), with 2.5 min of owner attention.
-- **Proof tab runs:**
-  - KR-53: saved pricing flow, passed.
-  - KR-57: Maya's upgrade flow, failed before the fix, defect opened.
-  - KR-59: Dev's sign-up flow, failed before the fix.
-  - The after-fix runs and the suite were recording when this was written; `kanehack status` lists them.
+- **Proof tab runs** (all verified): KR-57 and KR-59 are Maya's and Dev's flows failing before the fix (defects opened). KR-61 and KR-64 are the same flows passing after Seyrin's fixes. KR-65 is the regression suite passing, and KR-53 is the saved pricing flow passing. Link these on the Submit tab. KR-36 and KR-38 errored because of the kanehack bug; ignore them.
+- Perch currently has both fixes applied (uncommitted changes in `demo-app/public`). Run `npm run demo:prepare` to put the bugs back and stage the inbox before judging.
 - **Submission paused** at Aiden's request; he has more app work first. When ready: `kanehack submit --preflight`, then link the runs, and he finalizes in the browser.
