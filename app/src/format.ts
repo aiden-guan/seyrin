@@ -25,8 +25,8 @@ export const RISK: Record<Risk, { label: string; tone: Tone; hint: string }> = {
 };
 
 export const DECISION: Record<Decision, { label: string; tone: Tone; hint: string }> = {
-  auto: { label: 'Runs automatically', tone: 'good', hint: 'Safe to run now, and reversible' },
-  approve: { label: 'Needs your approval', tone: 'warn', hint: 'Nothing runs until you approve' },
+  auto: { label: 'Automatic', tone: 'good', hint: 'Safe to run now, and reversible' },
+  approve: { label: 'Needs OK', tone: 'warn', hint: 'Nothing runs until you approve' },
   refuse: { label: 'Refused', tone: 'bad', hint: 'Seyrin will not act on this' },
 };
 

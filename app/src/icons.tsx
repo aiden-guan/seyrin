@@ -29,8 +29,8 @@ export function SeyrinMark({ size = 26, title }: { size?: number; title?: string
     <svg width={size} height={size} viewBox="0 0 32 32" role={title ? 'img' : undefined} aria-label={title} aria-hidden={title ? undefined : true}>
       <defs>
         <linearGradient id="seyrin-mark-g" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#272a4d" />
-          <stop offset="1" stopColor="#5b4fd0" />
+          <stop offset="0" stopColor="#1d1b33" />
+          <stop offset="1" stopColor="#6b5cf0" />
         </linearGradient>
       </defs>
       <rect width="32" height="32" rx="9" fill="url(#seyrin-mark-g)" />
@@ -95,7 +95,7 @@ export const HandIcon = (p: IconProps) => (
 
 export const CheckIcon = (p: IconProps) => (
   <Icon {...p}>
-    <path d="m3.2 8.4 3 3 6.6-6.8" />
+    <path d="m3.2 8.4 3 3 6.6-6.8" pathLength={1} />
   </Icon>
 );
 
@@ -107,8 +107,8 @@ export const CrossIcon = (p: IconProps) => (
 
 export const SealIcon = (p: IconProps) => (
   <Icon {...p}>
-    <path d="M8 1.4 9.6 2.6l2-.1.6 1.9 1.6 1.2-.6 1.9.6 1.9-1.6 1.2-.6 1.9-2 -.1L8 13.6l-1.6-1.2-2 .1-.6-1.9-1.6-1.2.6-1.9-.6-1.9 1.6-1.2.6-1.9 2 .1z" />
-    <path d="m5.8 7.8 1.6 1.6 2.8-3" />
+    <path d="M8 1.4 9.6 2.6l2-.1.6 1.9 1.6 1.2-.6 1.9.6 1.9-1.6 1.2-.6 1.9-2 -.1L8 13.6l-1.6-1.2-2 .1-.6-1.9-1.6-1.2.6-1.9-.6-1.9 1.6-1.2.6-1.9 2 .1z" pathLength={1} />
+    <path d="m5.8 7.8 1.6 1.6 2.8-3" pathLength={1} />
   </Icon>
 );
 
@@ -186,6 +186,19 @@ export const BoltIcon = (p: IconProps) => (
     <path d="M8.8 1.6 3.4 9h4.2l-.8 5.4L12.6 7H8.2z" />
   </Icon>
 );
+
+export const WandIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="m2.4 13.6 8-8M9 4l1.4-1.4M12 7l1.4-1.4" />
+    <path d="M12.2 1.6v2M11.2 2.6h2M13.6 9.4v1.6M12.8 10.2h1.6M5.6 1.8v1.4M4.9 2.5h1.4" />
+  </Icon>
+);
+
+export const KindIcon = ({ kind, ...p }: IconProps & { kind: string }) => {
+  if (kind === 'document') return <DocIcon {...p} />;
+  if (kind === 'bug_report') return <BugIcon {...p} />;
+  return <WandIcon {...p} />;
+};
 
 export const ChevronIcon = (p: IconProps) => (
   <Icon {...p}>

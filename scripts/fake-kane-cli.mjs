@@ -25,7 +25,7 @@ function bugFor(text) {
   const shows = /verify the (\w+) plan shows (\$\d+)/i.exec(text);
   if (shows) {
     const html = readFileSync(resolve(perch, 'pricing.html'), 'utf8');
-    const card = new RegExp(`<h2>${shows[1]}</h2><div class="price">\\${shows[2].slice(1)}\\b`, 'i');
+    const card = new RegExp(`<h2>${shows[1]}</h2><div class="price">\\$${shows[2].slice(1)}\\b`, 'i');
     if (!card.test(html)) return `The ${shows[1]} plan does not show ${shows[2]}.`;
   }
   return null;
