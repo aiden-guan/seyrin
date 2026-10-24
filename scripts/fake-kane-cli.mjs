@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Offline stand-in for `kane-cli` with the same NDJSON shape (agent mode, v1).
 // Use with KANE_CLI_BIN=scripts/fake-kane-cli.mjs. It fails a run whose page still has a planted
-// Perch bug and passes otherwise, so the bridge and gate can be exercised without credits.
+// Perch bug and passes otherwise, so the Seyrin server and gate can be exercised without credits.
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { resolve, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';

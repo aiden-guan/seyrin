@@ -4,7 +4,7 @@
 //   node gate/spec-to-flows.mjs specs/perch-core.md [--dry-run] [--headed] [--only a,b]
 //
 // Spec format: YAML-ish frontmatter (`app:`, `url:` base URL, `repo:` path relative to the
-// pigeonbox-kane root) and a `## Acceptance criteria` section of bullets `- flow_name: objective`.
+// Seyrin repo root) and a `## Acceptance criteria` section of bullets `- flow_name: objective`.
 // Each criterion runs `kane-cli run "<objective>" --name <flow_name> --agent --headless --timeout 240`
 // in <repo>, so Kane saves <repo>/.testmuai/tests/<flow_name>_test.md for the gate to replay.
 import { existsSync, readFileSync, realpathSync } from 'node:fs';
@@ -76,7 +76,7 @@ async function main() {
   const { meta, criteria: all, problems } = parseSpec(readFileSync(specPath, 'utf8'));
   for (const p of problems) console.error(`warning: ${p}`);
   if (!meta.url) { console.error('spec frontmatter needs `url:` (the app base URL)'); return 2; }
-  if (!meta.repo) { console.error('spec frontmatter needs `repo:` (path relative to the pigeonbox-kane root)'); return 2; }
+  if (!meta.repo) { console.error('spec frontmatter needs `repo:` (path relative to the Seyrin repo root)'); return 2; }
   const criteria = only ? all.filter((c) => only.has(c.name)) : all;
   if (!criteria.length) { console.error('no acceptance criteria found (expected "## Acceptance criteria" with "- flow_name: objective" bullets)'); return 2; }
 

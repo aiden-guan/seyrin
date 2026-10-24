@@ -91,7 +91,7 @@ export function detectBugReport(input: BugReportInput): BugSignal {
 }
 
 /**
- * Normalise an origin list such as `["https://usepigeonbox.com", "http://localhost:4480"]`.
+ * Normalise an origin list such as `["https://perch.studio", "http://localhost:4480"]`.
  * Invalid entries are dropped.
  */
 export function normaliseOrigins(origins: string[]): string[] {

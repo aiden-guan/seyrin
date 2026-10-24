@@ -38,7 +38,7 @@ function listFlows(repo) {
 }
 const flowName = (file) => basename(file).replace(/_test\.md$/, '');
 const rel = (from, to) => relative(from, to) || '.';
-/** Repo label for output/logs: relative to the pigeonbox-kane root when inside it, else absolute. */
+/** Repo label for output/logs: relative to the Seyrin repo root when inside it, else absolute. */
 const show = (repo) => { const r = relative(ROOT, repo); return !r ? '.' : r.startsWith('..') ? repo : r; };
 const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 const secs = (ms) => `${(ms / 1000).toFixed(1)}s`;

@@ -20,4 +20,4 @@ Compile with `node gate/spec-to-flows.mjs specs/perch-core.md`.
 ## Not covered yet
 
 Upgrading to a paid plan (checkout) and sign-ups with a "+" in the email address. Those are the
-flows customers write in about; PigeonBox turns each report into a new flow.
+flows customers write in about; Seyrin turns each one into a new regression flow once it is fixed.

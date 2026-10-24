@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 
-/** pigeonbox-kane/ (the folder that holds gate/, demo-app/, specs/). */
+/** the Seyrin repo (the folder that holds gate/, demo-app/, specs/). */
 export const ROOT = resolve(here, '../..');
 export const GATE_LOG = process.env.KANE_GATE_LOG ? resolve(process.env.KANE_GATE_LOG) : resolve(ROOT, '.data/gate.ndjson');
 

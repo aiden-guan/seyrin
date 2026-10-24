@@ -1,4 +1,4 @@
-// Perch: a tiny demo product for the PigeonBox × Kane demo. Static files, clean URLs, no dependencies.
+// Perch: a tiny demo product for the Seyrin × Kane CLI demo. Static files, clean URLs, no dependencies.
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';

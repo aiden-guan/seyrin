@@ -10,7 +10,7 @@ import {
   verdictFromRun,
 } from './bug-report.ts';
 
-const ORIGINS = ['http://localhost:4480', 'https://usepigeonbox.com'];
+const ORIGINS = ['http://localhost:4480', 'https://perch.studio'];
 
 const report = {
   subject: 'Upgrade button does nothing',
@@ -46,7 +46,7 @@ describe('resolveAllowedUrl', () => {
 
   it('refuses other origins, credentials in URLs and non-web schemes', () => {
     expect(resolveAllowedUrl('https://evil.example/pricing', ORIGINS)).toBeNull();
-    expect(resolveAllowedUrl('https://user:pw@usepigeonbox.com/', ORIGINS)).toBeNull();
+    expect(resolveAllowedUrl('https://user:pw@perch.studio/', ORIGINS)).toBeNull();
     expect(resolveAllowedUrl('javascript:alert(1)', ORIGINS)).toBeNull();
     expect(resolveAllowedUrl('/pricing', [])).toBeNull();
   });
