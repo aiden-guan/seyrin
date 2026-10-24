@@ -4,7 +4,7 @@ import { resolve, relative } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { DATA_DIR, ROOT } from './config.mjs';
 import { extractSpec } from './extract.mjs';
-import { createKaneRunner, SHOTS } from './kane.mjs';
+import { createKaneRunner, EVIDENCE, SHOTS } from './kane.mjs';
 import { agentLabel, agentReady, diffAgainst, restore, runAgent, snapshot } from './agents.mjs';
 import { clearDocs, deleteDoc, saveDoc, writeDocument } from './docs.mjs';
 
@@ -465,7 +465,10 @@ export function createTasks({ config, core, baseUrl }) {
     evidencePack(id, attempt) {
       const task = tasks.get(id);
       const run = task?.runs.find((r) => r.attempt === Number(attempt)) || task?.run;
-      return run?.evidencePack || null;
+      if (!run) return null;
+      // Prefer the copy Seyrin kept in evidence/; Kane's own session copy can be cleaned up.
+      const candidates = [run.evidenceCopy && resolve(EVIDENCE, run.evidenceCopy), run.evidencePack].filter(Boolean);
+      return candidates.find((path) => existsSync(path)) || null;
     },
     screenshot(file) {
       const path = resolve(SHOTS, String(file).replace(/[^\w.-]/g, ''));

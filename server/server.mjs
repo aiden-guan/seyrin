@@ -110,12 +110,18 @@ try {
   watch(DATA_DIR, () => pumpGate());
 } catch {}
 
+/** Start `kane-cli evidence serve` for a pack; resolves to { viewer } or { error } with Kane's own words. */
 async function serveEvidence(pack) {
-  if (evidenceServers.has(pack)) return evidenceServers.get(pack);
+  if (evidenceServers.has(pack)) return { viewer: evidenceServers.get(pack) };
   const [cmd, args] = kaneCommand(['evidence', 'serve', pack]);
-  const child = spawn(cmd, args, { stdio: ['ignore', 'pipe', 'pipe'] });
-  const url = await new Promise((done) => {
-    let buffer = '';
+  let child;
+  try {
+    child = spawn(cmd, args, { stdio: ['ignore', 'pipe', 'pipe'] });
+  } catch (error) {
+    return { error: `Could not run kane-cli: ${error.message}` };
+  }
+  let buffer = '';
+  const viewer = await new Promise((done) => {
     const onData = (chunk) => {
       buffer += chunk;
       // kane-cli prints "serving … on http://127.0.0.1:PORT", then a "pack" and a "viewer" line per
@@ -125,12 +131,19 @@ async function serveEvidence(pack) {
     };
     child.stdout.on('data', onData);
     child.stderr.on('data', onData);
+    child.on('error', () => done(null));
     child.on('close', () => done(null));
     setTimeout(() => done(null), 15000);
   });
-  if (url) evidenceServers.set(pack, url);
-  else child.kill();
-  return url;
+  if (!viewer) {
+    child.kill();
+    const said = buffer.trim().split('\n').filter(Boolean).slice(-2).join(' ').slice(0, 300);
+    return { error: said ? `Kane could not serve the evidence: ${said}` : 'Kane did not start the evidence viewer.' };
+  }
+  evidenceServers.set(pack, viewer);
+  // If the viewer's server ever stops, start a fresh one next time.
+  child.on('close', () => evidenceServers.delete(pack));
+  return { viewer };
 }
 
 function serveFile(res, file) {
@@ -190,9 +203,9 @@ const server = createServer(async (req, res) => {
       }
       if (id && action === 'evidence' && req.method === 'POST') {
         const pack = tasks.evidencePack(id, url.searchParams.get('attempt'));
-        if (!pack) return send(res, 404, { error: 'No evidence pack for this run yet.' });
-        const viewer = await serveEvidence(pack);
-        return viewer ? send(res, 200, { viewer }) : send(res, 502, { error: 'Kane did not start the evidence viewer.' });
+        if (!pack) return send(res, 404, { error: "Kane's evidence pack for this run is not on disk." });
+        const { viewer, error } = await serveEvidence(pack);
+        return viewer ? send(res, 200, { viewer }) : send(res, 502, { error });
       }
     }
 
