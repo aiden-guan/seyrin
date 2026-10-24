@@ -365,7 +365,6 @@ a {
 .icon-btn-solid:hover:not(:disabled) {
   background: #2a2a30;
   color: #fff;
-  transform: rotate(-8deg) scale(1.06);
 }
 .icon-btn.is-spinning svg {
   animation: spin 0.8s linear infinite;
@@ -553,6 +552,9 @@ a {
 
 .top {
   grid-area: top;
+  /* Animated sections each form a stacking context; lift the ones whose tooltips hang over later ones. */
+  position: relative;
+  z-index: 20;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -652,6 +654,8 @@ a {
   border-right: 1px solid var(--line);
 }
 .list-head {
+  position: relative;
+  z-index: 5;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1084,6 +1088,10 @@ details > :not(summary) {
 .sg {
   gap: 8px;
 }
+.sp-body > .sg {
+  position: relative;
+  z-index: 3;
+}
 .sg-grid {
   container-type: inline-size;
   display: grid;
@@ -1203,6 +1211,11 @@ details > :not(summary) {
 }
 .sg.is-compact .sg-grid {
   background: var(--line);
+}
+/* Inside a card (overflow hidden), tips open upward so they aren't clipped. */
+.sg.is-compact [data-tip]::after {
+  top: auto;
+  bottom: calc(100% + 8px);
 }
 .sg.is-compact .sg-tile {
   padding: 8px 10px;
