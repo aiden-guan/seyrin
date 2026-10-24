@@ -6,7 +6,7 @@ import { api, onEvent, type Health, type OutgoingEmail, type Person, type Task, 
 import { KaneConsole } from './console.tsx';
 import { FIXTURES, ME, PERCH_URL, STARTERS, type DemoMail } from './fixtures.ts';
 import { KIND_LABEL, TRUST, fmtAgo, fmtWhen, initials, rowState } from './format.ts';
-import { ArrowOutIcon, ComposeIcon, CrossIcon, KindIcon, RetryIcon, SeyrinMark } from './icons.tsx';
+import { ArrowOutIcon, ComposeIcon, CrossIcon, RetryIcon, SeyrinMark } from './icons.tsx';
 import { SeyrinPanel } from './panel.tsx';
 import '@fontsource-variable/geist';
 import '@fontsource-variable/geist-mono';
@@ -223,7 +223,7 @@ function App() {
           <h2>Inbox</h2>
           <span className="count">{mails.length}</span>
           {needsYou ? (
-            <span key={needsYou} className="needs" data-tip="Waiting for your decision">
+            <span key={needsYou} className="needs">
               {needsYou} need{needsYou === 1 ? 's' : ''} you
             </span>
           ) : null}
@@ -244,16 +244,18 @@ function App() {
         <article className="thread-inner" key={open.threadId}>
           <h1 id="thread-subject">{open.subject}</h1>
           <div className="from">
-            <span className={`avatar tone-${TRUST[trust.trust].tone}`} aria-hidden="true">
+            <span className="avatar" aria-hidden="true">
               {initials(open.from.name)}
             </span>
             <div className="from-text">
               <div className="from-line">
                 <strong>{open.from.name}</strong>
                 <span className="from-email">&lt;{open.from.email}&gt;</span>
-                <span className={`tag tone-${TRUST[trust.trust].tone}`} title={TRUST[trust.trust].hint}>
-                  {TRUST[trust.trust].label}
-                </span>
+                {trust.trust === 'unknown' ? (
+                  <span className="tag tone-warn" title={TRUST[trust.trust].hint}>
+                    {TRUST[trust.trust].label}
+                  </span>
+                ) : null}
               </div>
               <div className="from-meta">
                 {fmtWhen(received)}
@@ -324,32 +326,16 @@ function TopBar({ health, down, resetting, onReset }: { health: Health | null; d
         <SeyrinMark size={22} title="Seyrin" />
         <span className="wordmark">Seyrin</span>
       </div>
+      {/* Status only speaks up when something is wrong. */}
       <div className="top-status" aria-label="System status">
-        {down ? (
-          <span className="chip tone-bad" data-tip="Run npm start">
-            <span className="dot" /> Server offline
-          </span>
+        {down ? <span className="alert tone-bad">Seyrin server offline · run npm start</span> : null}
+        {health && !kaneOk ? (
+          <span className="alert tone-warn">{health.kane.installed ? 'Kane CLI not signed in · kane-cli login' : 'Kane CLI not installed'}</span>
         ) : null}
-        {health ? (
-          <>
-            <span
-              className={`chip tone-${kaneOk ? 'good' : 'warn'}`}
-              data-tip={`${health.kane.installed ? `Kane CLI ${health.kane.version || ''}${health.kane.fake ? ' (offline stand-in)' : ''}` : 'Kane CLI missing'}${health.kane.installed ? (health.kane.signedIn ? ', signed in' : ', not signed in') : ''}`}
-            >
-              <span className="dot" />
-              Kane{health.kane.installed && health.kane.version ? <span className="chip-dim">{health.kane.fake ? 'stand-in' : health.kane.version}</span> : null}
-            </span>
-            <span className={`chip tone-${health.openai ? 'good' : 'neutral'}`} data-tip={health.openai ? 'OpenAI reads emails and plans work' : 'Off: set OPENAI_API_KEY'}>
-              <span className="dot" />
-              OpenAI
-            </span>
-            {perch ? (
-              <span className={`chip tone-${perch.fixReady ? 'good' : 'warn'}`} data-tip={`${perch.name} fix agent: ${perch.fixAgent || 'none'}${perch.fixReady ? '' : ' (not ready)'}`}>
-                <span className="dot" />
-                Fix agent
-              </span>
-            ) : null}
-          </>
+        {health && perch && !perch.fixReady ? (
+          <span className="alert tone-warn" title={`Fix agent: ${perch.fixAgent || 'none'}`}>
+            {perch.name} fix agent not ready
+          </span>
         ) : null}
       </div>
       <nav className="top-links" aria-label="Demo links">
@@ -403,19 +389,10 @@ function MailRow({ mail, open, summary, now, onOpen }: { mail: DemoMail; open: b
       </span>
       <span className="row-subject">{mail.subject}</span>
       <span className="row-snippet">{mail.bodyText.replace(/\s+/g, ' ').slice(0, 110)}</span>
-      {kind || state ? (
-        <span className="row-tags">
-          {kind ? (
-            <span className={`kind kind-${kind}`}>
-              <KindIcon kind={kind} size={12} /> {KIND_LABEL[kind]}
-            </span>
-          ) : null}
-          {state ? (
-            <span key={state.label} className={`row-state tone-${state.tone}`}>
-              <span className={state.live ? 'spinner' : 'dot'} aria-hidden="true" />
-              {state.label}
-            </span>
-          ) : null}
+      {state ? (
+        <span key={state.label} className={`row-state tone-${state.tone}`} title={kind ? KIND_LABEL[kind] : undefined}>
+          {state.live ? <span className="spinner" aria-hidden="true" /> : null}
+          {state.label}
         </span>
       ) : null}
     </button>

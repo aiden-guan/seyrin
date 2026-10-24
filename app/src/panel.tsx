@@ -1,8 +1,8 @@
 // The Seyrin panel: what was asked, the safeguards that decided what happens, the plan, live
 // progress from the agent and Kane, the verified result, and the reply. One panel per email.
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { AsciiField } from './ascii.tsx';
 import { api, ApiError, isTask, shotUrl, type Health, type KaneRun, type LogEntry, type OutgoingEmail, type Policy, type Task, type WorkAttempt } from './api.ts';
+import { AsciiField } from './ascii.tsx';
 import {
   BUSY,
   DECISION,
@@ -213,7 +213,6 @@ export function SeyrinPanel({ email, health, onTask, onUseReply }: Props) {
     return (
       <PanelFrame>
         <div className="sp-empty">
-          <AsciiField mode="drift" className="sp-empty-field" />
           <span className="sp-empty-icon">
             <LeafIcon size={20} />
           </span>
@@ -227,7 +226,6 @@ export function SeyrinPanel({ email, health, onTask, onUseReply }: Props) {
     return (
       <PanelFrame>
         <div className="sp-empty is-offline">
-          <AsciiField mode="drift" className="sp-empty-field" />
           <span className="sp-empty-icon">
             <AlertIcon size={20} />
           </span>
@@ -330,11 +328,7 @@ function PanelFrame({ task, busy, elapsed, children }: { task?: Task; busy?: boo
       <header className="sp-head">
         <SeyrinMark size={20} />
         <span className="sp-title">Seyrin</span>
-        {task ? (
-          <span className={`kind kind-${task.kind}`}>
-            <KindIcon kind={task.kind} size={12} /> {KIND_LABEL[task.kind] || task.kind}
-          </span>
-        ) : null}
+        {task ? <span className="sp-kind">{KIND_LABEL[task.kind] || task.kind}</span> : null}
         {task ? <StatusPill task={task} busy={Boolean(busy)} elapsed={elapsed ?? null} /> : null}
       </header>
       <div className="sp-body">{children}</div>
@@ -354,7 +348,7 @@ function StatusPill({ task, busy, elapsed }: { task: Task; busy: boolean; elapse
           : 'neutral';
   return (
     <span className={`status-pill tone-${tone}`} role="status">
-      {busy ? <span className="spinner" aria-hidden="true" /> : <span className="dot" aria-hidden="true" />}
+      {busy ? <span className="spinner" aria-hidden="true" /> : null}
       <span key={shortPhase(task)} className="status-word">{shortPhase(task)}</span>
       {busy && elapsed !== null ? <span className="status-time">{fmtElapsed(elapsed)}</span> : null}
     </span>
@@ -411,24 +405,18 @@ function Safeguards({ policy, trust, title = 'Safeguards', compact = false }: { 
   const tiles = (
     <div className="sg-grid">
       {trust ? (
-        <div className={`sg-tile tone-${TRUST[trust].tone}`} data-tip={TRUST[trust].hint}>
+        <div className={`sg-tile${trust === 'unknown' ? ' tone-warn' : ''}`} data-tip={TRUST[trust].hint}>
           <span className="sg-k">Trust</span>
-          <span className="sg-v">
-            <PersonIcon /> <span>{TRUST[trust].label}</span>
-          </span>
+          <span className="sg-v">{TRUST[trust].label}</span>
         </div>
       ) : null}
-      <div className={`sg-tile tone-${risk.tone}`} data-tip={risk.hint}>
+      <div className="sg-tile" data-tip={risk.hint}>
         <span className="sg-k">Risk</span>
-        <span className="sg-v">
-          <RiskIcon risk={policy.risk} /> <span>{risk.label}</span>
-        </span>
+        <span className="sg-v">{risk.label}</span>
       </div>
       <div className={`sg-tile tone-${decision.tone}`} data-tip={decision.hint}>
         <span className="sg-k">Decision</span>
-        <span className="sg-v">
-          <DecisionIcon decision={policy.decision} /> <span>{decision.label}</span>
-        </span>
+        <span className="sg-v">{decision.label}</span>
       </div>
     </div>
   );
@@ -440,7 +428,7 @@ function Safeguards({ policy, trust, title = 'Safeguards', compact = false }: { 
         // The why is one click away; a refusal shows it straight away.
         <details className="sg-why" open={policy.decision === 'refuse'}>
           <summary>
-            <ShieldIcon /> Why <ChevronIcon className="chev" />
+            Why <ChevronIcon className="chev" />
           </summary>
           <ul className="sg-reasons">
             {policy.reasons.map((reason, i) => (
@@ -724,7 +712,6 @@ function StateCard(props: CardProps) {
       const verified = task.result?.verified !== false;
       return (
         <section className={`card ${verified ? 'card-done' : 'card-neutral'}`} aria-label="Result">
-          {verified ? <AsciiField mode="ripple" once className="card-field" /> : null}
           <div className="card-h">
             <SealIcon className="draw" /> {verified ? 'Verified by Kane' : 'Done'}
           </div>
