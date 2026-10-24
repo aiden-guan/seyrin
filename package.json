@@ -20,7 +20,8 @@
     "bench": "node bench/scenario.mjs && node bench/run.mjs && node bench/compare.mjs",
     "bench:compare": "node bench/compare.mjs",
     "bench:measure": "node bench/run.mjs",
-    "bench:manual": "node bench/stopwatch.mjs"
+    "bench:manual": "node bench/stopwatch.mjs",
+    "report": "node bench/report-runs.mjs"
   },
   "dependencies": {
     "react": "^19.1.0",
