@@ -1,6 +1,8 @@
 node_modules/
 .data/
 .env
+.env.*
+!.env.example
 app/dist/
 site/dist/
 **/.testmuai/kane-gate.json
@@ -9,3 +11,13 @@ site/dist/
 
 # Kane evidence packs include the TestMu account email; publish deliberately
 evidence/
+*.evidence
+
+# Generated Kane runs; keep the authored *_test.md flows.
+**/.testmuai/tests/output-*/
+bench/flows/output-*/
+
+# Local logs and Python artifacts from generated browser runners.
+*.log
+__pycache__/
+*.pyc
