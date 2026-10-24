@@ -4,6 +4,7 @@
 import '@fontsource/pixelify-sans/400.css';
 import '@fontsource/pixelify-sans/600.css';
 import '@fontsource/instrument-serif/400-italic.css';
+import '@fontsource/jersey-15/400.css';
 import './style.css';
 import { BEACH } from './assets/beach';
 import dayUrl from './assets/beach-day.png';

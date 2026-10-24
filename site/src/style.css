@@ -10,6 +10,7 @@
   --night: #14112f;
   --night-ink: #f4f2ff;
   --pixel: 'Pixelify Sans', ui-monospace, monospace;
+  --display: 'Jersey 15', 'Pixelify Sans', ui-monospace, monospace;
   --serif: 'Instrument Serif', ui-serif, Georgia, serif;
   color-scheme: light;
 }
@@ -150,11 +151,11 @@ body.is-dark .bar .link {
 
 .h1-a {
   display: block;
-  font-family: var(--pixel);
-  font-weight: 600;
-  font-size: clamp(40px, 7.4vw, 112px);
-  line-height: 0.95;
-  letter-spacing: -0.01em;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(50px, 9.2vw, 140px);
+  line-height: 0.9;
+  letter-spacing: 0.01em;
 }
 
 .h1-b {
@@ -169,10 +170,10 @@ body.is-dark .bar .link {
 
 .star {
   display: inline-block;
-  width: 0.5em;
-  height: 0.5em;
+  width: 0.42em;
+  height: 0.42em;
   margin: 0 0.04em;
-  vertical-align: 0.42em;
+  vertical-align: 0.3em;
 }
 
 .star svg {
@@ -279,9 +280,11 @@ body.is-dark .bar .link {
 
 .end-a {
   margin: 0;
-  font-weight: 600;
-  font-size: clamp(36px, 6.2vw, 92px);
-  line-height: 1;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(44px, 7.6vw, 114px);
+  line-height: 0.95;
+  letter-spacing: 0.01em;
 }
 
 .end-b {
